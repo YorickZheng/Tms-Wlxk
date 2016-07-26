@@ -1,0 +1,89 @@
+@startuml
+
+title 装车合同类图
+
+package domain {
+    Contract "One" .. "Many" TradeBill
+    (Contract, TradeBill) . ContractTradeBill
+
+    Contract "One" .. "Many" ContractReview
+    (Contract, ContractReview) . ContractReview
+
+    Contract "One" .. "Many" ContractLog
+    (Contract, ContractLog) . ContractLog
+
+    class Contract {
+        合同编码: String
+        结算方式: Enum
+        备注: String
+    }
+
+    class ContractTradeBill {
+        合同编号: String
+        交易单编号: String
+    }
+
+    class ContractReview {
+        合同编号: String
+        审核状态: Enum
+        审核人: String
+        说明: String
+    }
+
+
+    class ContractLog {
+        名称: String
+        说明: String
+        目标类: String
+        目标类编号: String
+        目标类说明: String
+    }
+}
+
+package repository {
+    ContractRepository --|> JpaCrudRepository
+    ContractTradeBillRepository --|> JpaCrudRepository
+    ContractReviewRepository --|> JpaCrudRepository
+    ContractLogRepository --|> JpaCrudRepository
+
+    class JpaCrudRepository {
+        +void insert(domain)
+        +void save(domain)
+        +void delete(domain)
+        +void deleteById(id)
+        +Domain findById(id)
+        +List pageData(currentPage, pageSize, params)
+    }
+}
+
+package service {
+    ContractService ..|> ContractRepository
+    ContractTradeBillService ..|> ContractTradeBillRepository
+    ContractReviewService ..|> ContractReviewRepository
+    ContractLogService ..|> ContractLogRepository
+}
+
+package controller {
+    ContractController .. ContractService
+    ContractController .. ContractTradeBillService
+    ContractController .. ContractReviewService
+    ContractController .. ContractLogService
+
+    class ContractController {
+        -contractService : ContractService;
+        -contractTradeBillService : ContractTradeBillService
+        -contractReviewService : ContractReviewService
+        -contractLogService : ContractLogService
+
+        +Map addContract(contract)
+        +Map removeContract(id)
+        +Map updateContract(contract, type)
+        +Page<Contract> pageData(currentPage, pageSize, params)
+
+
+        +Map bindTradeBill(contractId, tradeBillIds)
+        +Map unBindTradeBill(contractId, tradeBillIds)
+
+    }
+}
+@enduml

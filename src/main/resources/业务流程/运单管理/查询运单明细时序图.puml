@@ -1,0 +1,16 @@
+@startuml
+title 明细查询运单时序图
+autonumber
+
+"Query Detail Request" --> "TradeBillController" : 发送明细查询条件
+"TradeBillController" --> "TradeBillService" : findById() 调用运单明细查询方法
+"TradeBillService" --> "TradeBillService" : checkDetailQueryParams() 校验查询参数
+"TradeBillService" --> "TradeBillGoodsService" : countByTradeBillId() 统计单条交易单的商品信息集合
+"TradeBillService" --> "LossesService" : countByTradeBillId() 统计单条交易单的挂账信息集合
+"TradeBillService" --> "TradeBillService" : generateTradeBillData() 将查询数据整合
+
+"TradeBillGoodsService" --> "TradeBillService" : countByTradeBillId() 返回单条交易单商品信息集合
+"LossesService" --> "TradeBillService" : countByTradeBillId() 返回单条交易单的挂账信息集合
+"TradeBillService" --> "TradeBillController" : 返回明细数据
+"TradeBillController" --> "Query Detail Request" : 返回查询结果
+@enduml

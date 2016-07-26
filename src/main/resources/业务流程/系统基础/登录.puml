@@ -1,0 +1,25 @@
+@startuml
+start
+partition 客户端 {
+    :输入登录信息;
+    :发送请求至服务器;
+}
+partition 服务器 {
+    if (缓存层数据校验) then (通过)
+        :返回登录成功;
+    else
+        if (数据库层校验) then (通过)
+            :将用户信息添加到缓存;
+            :将角色和菜单加载到缓存;
+            :返回登录成功;
+        else
+            :返回数据错误;
+        endif
+    endif
+}
+partition 客户端 {
+    :显示服务器返回信息;
+    :将角色和菜单保存到本地;
+}
+stop
+@enduml

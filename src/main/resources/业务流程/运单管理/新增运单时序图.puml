@@ -1,0 +1,24 @@
+@startuml
+title 新增运单时序图
+autonumber
+
+"Add Request" --> "TradeBillController" : 发送 运单、商品列表、费用列表 数据
+"TradeBillController" --> "TradeBillService" : openTradeBill() 开单
+"TradeBillService" --> "TradeBillService" : checkAddTradeBill() \n校验数据正确性
+"TradeBillService" --> "TradeBillService" : save() 新增运单
+"TradeBillService" --> "GoodsService" : saveGoodsList() 新增商品
+"TradeBillService" --> "TradeBillGoodsService" : saveTradeBillGoodsList() 新增运单商品关联关系
+"TradeBillService" --> "LossesService" : saveLossesList() 新增运单的费用信息
+"TradeBillService" --> "TradeBillReviewService" : save() 新增运单的审核信息
+"TradeBillService" --> "TradeBillOperationRecordService" : add() 新增运单的操作日志
+
+"TradeBillService" --> "TradeBillService" : save() 返回操作记录
+"GoodsService" --> "TradeBillService" : saveGoodsList() 返回操作结果
+"TradeBillGoodsService" --> "TradeBillService" : saveTradeBillGoodsList() 返回操作结果
+"LossesService" --> "TradeBillService" : saveLossesList() 返回操作结果
+"TradeBillReviewService" --> "TradeBillService" : save() 返回操作结果
+"TradeBillOperationRecordService" --> "TradeBillService" : add() 返回操作结果
+"TradeBillService" --> "TradeBillController" : openTradeBill() 返回操作结果
+"TradeBillController" --> "Add Request" : 返回响应数据
+
+@enduml

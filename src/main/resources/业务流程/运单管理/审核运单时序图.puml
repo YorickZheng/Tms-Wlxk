@@ -1,0 +1,15 @@
+@startuml
+title 审核运单时序图
+autonumber
+
+"Review Request" --> "TradeBillController" : 发送 审核 数据
+"TradeBillController" --> "TradeBillService" : reviewTradeBill() 审核交易单
+"TradeBillService" --> "TradeBillService" : checkReviewTradeBill() \n数据校验
+"TradeBillService" --> "TradeBillReviewService" : reviewTradeBill() 更新运单审核信息
+"TradeBillService" --> "TradeBillOperationRecordService" : add() 审核运单的操作日志
+"TradeBillReviewService" --> "TradeBillService" : reviewTradeBill() 返回操作结果
+"TradeBillOperationRecordService" --> "TradeBillService" : add() 返回操作结果
+"TradeBillService" --> "TradeBillController" : reviewTradeBill() 返回操作结果
+"TradeBillController" --> "Review Request" : 返回响应数据
+
+@enduml

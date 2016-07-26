@@ -1,0 +1,28 @@
+@startuml
+title 修改运单时序图
+autonumber
+
+"Update Request" --> "TradeBillController" : 发送 运单、商品列表、费用列表 数据
+"TradeBillController" --> "TradeBillService" : updateTradeBill() 更新运单
+"TradeBillService" --> "TradeBillService" : checkUpdateTradeBill() \n校验数据正确性
+"TradeBillService" --> "TradeBillService" : save() 更新运单\nvoToTradeBill()赋值方法
+"TradeBillService" --> "GoodsService" : deleteGoodsList() 删除商品
+"TradeBillService" --> "GoodsService" : saveGoodsList() 新增商品
+"TradeBillService" --> "TradeBillGoodsService" : deleteTradeBillGoodsList() 删除运单商品关联关系
+"TradeBillService" --> "TradeBillGoodsService" : saveTradeBillGoodsList() 新增运单商品关联关系
+"TradeBillService" --> "LossesService" : deleteLossesList() 删除运单的费用信息
+"TradeBillService" --> "LossesService" : saveLossesList() 新增运单的费用信息
+"TradeBillService" --> "TradeBillOperationRecordService" : add() 运单的操作日志
+
+"TradeBillService" --> "TradeBillService" : save() 返回操作结果
+"GoodsService" --> "TradeBillService" : deleteGoodsList() 返回操作结果
+"GoodsService" --> "TradeBillService" : saveGoodsList() 返回操作结果
+"TradeBillGoodsService" --> "TradeBillService" : deleteTradeBillGoodsList() 返回操作结果
+"TradeBillGoodsService" --> "TradeBillService" : saveTradeBillGoodsList() 返回操作结果
+"LossesService" --> "TradeBillService" : deleteLossesList() 返回操作结果
+"LossesService" --> "TradeBillService" : saveLossesList() 返回操作结果
+"TradeBillOperationRecordService" --> "TradeBillService" : add() 返回操作结果
+"TradeBillService" --> "TradeBillController" : updateTradeBill() 返回操作结果
+"TradeBillController" --> "Update Request" : 返回响应数据
+
+@enduml

@@ -1,0 +1,139 @@
+@startuml
+
+title 运单管理类图
+
+package domain {
+
+    TradeBill "One" ... "Many" Goods
+    (TradeBill, Goods) . TradeBillGoods
+
+    TradeBill "One" ... "Many" Losses
+    (TradeBill, Losses) . Losses
+
+    TradeBill "One" ... "Many" TradeBillReview
+    (TradeBill, TradeBillReview) . TradeBillReview
+
+    TradeBill "One" ... "Many" TradeBillOperationRecord
+    (TradeBill, TradeBillOperationRecord) . TradeBillOperationRecord
+
+
+    class TradeBill {
+        -发货方手机: String
+        -发货客户: String
+        -发货人: String
+        -发货人电话: String
+        -发货地址: String
+
+        -收货方手机: String
+        -收货客户: String
+        -收货人: String
+        -收货人电话: String
+        -收获地址: String
+
+        -运单号: String
+        -托运日期: Date
+        -始发: String
+        -到达: String
+        -配送方式: Enum
+
+        -备注: String
+        -订单状态: Enum
+
+        -网点编号: String
+        -网点名称: String
+    }
+
+    class Goods {
+        -名称: String
+        -包装: Enum
+        -件数: Integer
+        -重量: Double
+        -重量单价: BigDecimal
+        -体积: Double
+        -体积单价: BigDecimal
+        -特殊货物: Enum
+        -声明价值: BigDecimal
+        -保价费: BigDecimal
+    }
+
+    class TradeBillGoods {
+        交易单编号: String
+        商品编号: String
+    }
+
+    class Losses {
+        交易单编号: String
+        交易单号: String
+        费用类型: Enum
+        金额: BigDecimal
+        已收金额: BigDecimal
+    }
+
+    class TradeBillReview {
+        交易编号: String
+        交易单号: Stirng
+        审核状态: Enum
+        审核人: String
+        说明: String
+    }
+
+    class TradeBillOperationRecord {
+        名称: String
+        说明: String
+        状态: Boolean
+        交易单编号: String
+    }
+
+}
+
+package repository {
+    TradeBillRepository --|> JpaCrudRepository
+    GoodsRepository --|> JpaCrudRepository
+    TradeBillGoodsRepository --|> JpaCrudRepository
+    LossesRepository --|> JpaCrudRepository
+    TradeBillReviewRepository --|> JpaCrudRepository
+    TradeBillOperationRecordRepository --|> JpaCrudRepository
+
+    class JpaCrudRepository {
+        +void insert(domain)
+        +void save(domain)
+        +void delete(domain)
+        +void deleteById(id)
+        +Domain findById(id)
+        +List pageData(currentPage, pageSize, params)
+    }
+}
+
+package service {
+    TradeBillService ...> TradeBillRepository
+    GoodsService ...> GoodsRepository
+    TradeBillGoodsService ...> TradeBillGoodsRepository
+    LossesService ...> LossesRepository
+    TradeBillReviewService ...> TradeBillReviewRepository
+    TradeBillOperationRecordService ...> TradeBillOperationRecordRepository
+}
+
+package controller {
+    TradeBillController .. TradeBillService
+    TradeBillController .. GoodsService
+    TradeBillController .. TradeBillGoodsService
+    TradeBillController .. LossesService
+    TradeBillController .. TradeBillReviewService
+    TradeBillController .. TradeBillOperationRecordService
+
+    class TradeBillController {
+        -TradeBillService : tradeBillService;
+        -GoodsService : goodsService
+        -TradeBillGoodsService : tradeBillGoodsService
+        -LossesService : lossesService
+        -TradeBillReviewService : tradeBillReviewService
+        -TradeBillOperationRecordService : tradeBillLogService
+
+        +Map add(TradeBill, goodsList)
+        +Map remove(id)
+        +Map update(TradeBill, goodsList, type)
+        +Page<TradeBill> pageData(currentPage, pageSize, params)
+    }
+}
+
+@enduml

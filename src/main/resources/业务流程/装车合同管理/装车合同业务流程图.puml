@@ -1,0 +1,46 @@
+@startuml
+start
+:选择装车合同菜单;
+:选择操作命令;
+if (新增)
+    partition 新增 {
+        while(填写装车合同信息)
+        :数据校验;
+        endwhile(校验通过)
+        :新增成功;
+    }
+else if(审核)
+    partition 审核 {
+        while(审核)
+        :数据校验;
+        endwhile(校验通过)
+        :审核通过;
+    }
+else if(修改)
+    partition 修改合同 {
+        while(修改合同信息)
+        :数据校验;
+        endwhile(校验通过)
+        :修改成功;
+    }
+else if(删除)
+    partition 删除合同 {
+        while (删除合同)
+        :数据校验;
+        endwhile(校验通过)
+        :删除成功;
+    }
+else if(查询)
+    partition 查询 {
+        :输入查询信息\n(有默认查询项);
+        :分页查询信息;
+        :显示查询结果;
+    }
+else if(查询明细)
+    partition 合同明细 {
+        :选择合同;
+        :显示合同下所有运单的信息;
+    }
+endif
+stop
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+title 装车业务流程图
+
+start
+:选择运单;
+while(发车)
+    :校验选择运单的发站和到站是否符合装车合同的路线;
+endwhile(校验通过)
+:发车;
+stop
+@enduml

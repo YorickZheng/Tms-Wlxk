@@ -1,0 +1,24 @@
+@startuml
+title 作废运单时序图
+autonumber
+
+"Disuse Request" --> "TradeBillController" : 发送 运单、商品列表、费用列表 数据
+"TradeBillController" --> "TradeBillService" : disuseTradeBill() 作废运单
+"TradeBillService" --> "TradeBillService" : checkDisuseTradeBill() \n作废运单数据校验
+"TradeBillService" --> "TradeBillService" : save() 作废交易单
+"TradeBillService" --> "GoodsService" : saveGoodsList() 作废商品
+"TradeBillService" --> "TradeBillGoodsService" : saveTradeBillGoodsList() 作废运单商品关联关系
+"TradeBillService" --> "LossesService" : saveLossesList() 作废运单的费用信息
+"TradeBillService" --> "TradeBillReviewService" : saveList() 作废运单的审核信息
+"TradeBillService" --> "TradeBillOperationRecordService" : add() 作废运单的操作日志
+
+"TradeBillService" --> "TradeBillService" : save() 返回操作结果
+"GoodsService" --> "TradeBillService" : saveGoodsList() 返回操作结果
+"TradeBillGoodsService" --> "TradeBillService" : saveTradeBillGoodsList() 返回操作结果
+"LossesService" --> "TradeBillService" : saveGoodsList() 返回操作结果
+"TradeBillReviewService" --> "TradeBillService" : saveTradeBillGoodsList() 返回操作结果
+"TradeBillOperationRecordService" --> "TradeBillService" : add() 返回操作结果
+"TradeBillService" --> "TradeBillController" : disuseTradeBill() 返回操作结果
+"TradeBillController" --> "Disuse Request" : 返回响应数据
+
+@enduml

@@ -1,0 +1,102 @@
+@startuml
+title 系统基础模块类图
+
+package domain {
+    User "One" <-. "Many" Role
+    (User, Role) .> UserRole
+    Role "One" <-. "Many" Menu
+    (Role, Menu) .> RoleMenu
+
+    class User {
+        username : String;
+        password : String;
+        name : String;
+    }
+    class Role {
+        name : String;
+        code : String;
+        description : String;
+    }
+    class Menu {
+        name : String;
+        code : String;
+        url : String;
+        imageUrl : String;
+        description : String;
+    }
+    class UserRole {
+        userId : String;
+        roleId : String;
+    }
+    class RoleMenu {
+        roleId : String;
+        menuId : String;
+    }
+}
+
+package repository {
+    UserRepository --|> JpaCrudRepository
+    RoleRepository --|> JpaCrudRepository
+    MenuRepository --|> JpaCrudRepository
+    UserRoleRepository --|> JpaCrudRepository
+    RoleMenuRepository --|> JpaCrudRepository
+
+    class JpaCrudRepository {
+        +void save(domain)
+        +void delete(domain)
+        +void deleteById(id)
+        +Domain findById(id)
+    }
+
+    class UserRepository {
+    }
+}
+
+package service {
+    UserService ..> UserRepository
+    RoleService ..> RoleRepository
+    MenuService ..> MenuRepository
+    UserRoleService ..> UserRoleRepository
+    RoleMenuService ..> RoleMenuRepository
+
+    class UserService {
+        +Map<String, Object> login(username, password)
+    }
+}
+
+package controller {
+    SysController ..|> UserService
+    SysController ..|> RoleService
+    SysController ..|> MenuService
+    SysController ..|> UserRoleService
+    SysController ..|> RoleMenuService
+
+    class SysController {
+        Map login(username, password)
+        Map addUser(user)
+        Map deleteUser(id)
+        Map updateUser(user)
+        Map pageDateByUser(currentPage, pageSize, params)
+
+        Map addRole(role)
+        Map deleteRole(id)
+        Map updateUser(role)
+        Map pageDateByRole(currentPage, pageSize, params)
+
+        Map addMenu(menu)
+        Map deleteMenu(id)
+        Map updateMenu(menu)
+        Map pageDateByMenu(currentPage, pageSize, params)
+
+        Map addUserRole(userId, roleIds)
+        Map deleteUserRole(userId, roleIds)
+
+        Map addRoleMenu(roleId, menuIds)
+        Map deleteRoleMenu(roleId, menuIds)
+    }
+}
+
+
+
+
+@enduml

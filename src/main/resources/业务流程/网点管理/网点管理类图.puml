@@ -1,0 +1,136 @@
+@startuml
+
+title 网点类图
+
+package domain {
+
+    Branch "One" .. "Many" Linkman
+    (Branch, Linkman) . BranchLinkman
+
+    Branch "One" .. "Many" BankCard
+    (Branch, BankCard) . BranchBankCard
+
+    Branch "One" .. "Many" BranchReview
+    (Branch, BranchReview) . BranchReview
+
+    Branch "One" .. "Many" BranchLog
+    (Branch, BranchLog) . BranchLog
+
+    class Branch {
+        上级网点编号: String
+        网点级别: Enum
+
+        网点编码: String
+        网点名称: String
+        网点类型: Enum
+        网点业务类型: Enum
+        网点所在城市: String
+        网点详细地址: String
+
+        组织机构编码: String
+        电话: String
+        传真: String
+        级别: Enum
+        年物流费(万元): Double
+        发货车市: String
+        详细地址: String
+
+        营业执照图片: String
+        组织机构图片: String
+    }
+
+    class Linkman {
+        联系人: String
+        手机: String
+        电话: String
+        QQ: String
+        联系人生日: Date
+        联系人职位: String
+        联系人性别: Enum
+    }
+
+    class BranchLinkman {
+        网点编号: String
+        联系人编号: String
+    }
+
+    class BankCard {
+        银行卡号: String
+        银行户名: String
+        开户银行: String
+        开户支行: String
+        所在城市: String
+        身份证号: String
+    }
+
+    class BranchBankCard {
+        网点编号: String
+        银行卡编号: String
+        是否为默认: Boolean
+        排序级别: Integer
+    }
+
+    class BranchReview {
+        网点编号: String
+        审核状态: Enum
+        审核人: String
+        说明: String
+    }
+
+    class BranchLog {
+        名称: String
+        说明: String
+        目标类: String
+        目标类编号: String
+        目标类说明: String
+    }
+
+}
+
+package repository {
+    BranchRepository --|> JpaCrudRepository
+    BranchParentBranchRepository --|> JpaCrudRepository
+    BranchReviewRepository --|> JpaCrudRepository
+    BranchLogRepository --|> JpaCrudRepository
+
+    class JpaCrudRepository {
+        +void insert(domain)
+        +void save(domain)
+        +void delete(domain)
+        +void deleteById(id)
+        +Domain findById(id)
+        +List pageData(currentPage, pageSize, params)
+    }
+}
+
+package service {
+    BranchService ..|> BranchRepository
+    BranchParentBranchService ..|> BranchParentBranchRepository
+    BranchReviewService ..|> BranchReviewRepository
+    BranchLogService ..|> BranchLogRepository
+}
+
+package controller {
+    BranchController .. BranchService
+    BranchController .. BranchParentBranchService
+    BranchController .. BranchReviewService
+    BranchController .. BranchLogService
+
+    class BranchController {
+        -BranchService : BranchService;
+        -BranchParentBranchService : BranchParentBranchService
+        -BranchReviewService : BranchReviewService
+        -BranchLogService : BranchLogService
+
+        +Map addBranch(Branch)
+        +Map removeBranch(id)
+        +Map updateBranch(Branch, type)
+        +Page<Branch> pageData(currentPage, pageSize, params)
+
+
+        +Map bindParentBranch(BranchId, tradeBillIds)
+        +Map unBindParentBranch(BranchId, tradeBillIds)
+
+    }
+}
+@enduml

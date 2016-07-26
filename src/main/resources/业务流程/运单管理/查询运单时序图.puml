@@ -1,0 +1,13 @@
+@startuml
+title 分页查询运单时序图
+autonumber
+
+"Query Request" --> "TradeBillController" : 发送 分页查询条件
+"TradeBillController" --> "TradeBillController" : checkPageQueryParams() 校验分页查询参数
+"TradeBillController" --> "TradeBillService" : pageData() 调用运单分页查询方法
+"TradeBillService" --> "TradeBillController" : 返回运单分页数据
+"TradeBillController" --> "TradeBillGoodsService" : countByTradeBillId() 统计单条交易单的商品信息集合
+"TradeBillController" --> "LossesService" : countByTradeBillId() 统计单条交易单的挂账信息集合
+"TradeBillController" --> "TradeBillController" : generateTradeBillData() 将查询数据整合
+"TradeBillController" --> "Query Request" : 返回查询结果
+@enduml

@@ -1,0 +1,51 @@
+@startuml
+start
+:选择车辆管理菜单;
+:选择车辆操作命令;
+if (新增)
+    partition 新增车辆 {
+        while(填写车辆信息)
+        :数据校验;
+        endwhile(校验通过)
+        :新增成功;
+    }
+else if(审核)
+    partition 审核 {
+        while(审核)
+        :数据校验;
+        endwhile(校验通过)
+        :审核通过;
+    }
+else if(修改)
+    partition 修改车辆 {
+        while(修改车辆信息)
+        :数据校验;
+        endwhile(校验通过)
+        :修改成功;
+    }
+else if(删除)
+    partition 删除车辆 {
+        while (删除车辆)
+        :数据校验;
+        endwhile(校验通过)
+        :删除成功;
+    }
+else if(车辆跟踪)
+    partition 车辆跟踪 {
+        :选择一条车辆信息;
+        :按日选择车辆行动轨迹;
+    }
+else if(查询)
+    partition 查询 {
+        :输入查询信息\n(有默认查询项);
+        :分页查询车辆信息;
+        :显示查询结果;
+    }
+else if(查询明细)
+    partition 查询明细 {
+        :选择一条车辆;
+        :显示车辆明细;
+    }
+endif
+stop
+@enduml

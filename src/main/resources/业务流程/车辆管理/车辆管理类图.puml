@@ -1,0 +1,102 @@
+@startuml
+
+title 车辆管理类图
+
+package car {
+
+    package domain {
+
+        Car "One" --. "Many" Driver
+        (Car, Driver) . CarDriver
+
+        Branch "One" <-. "Many" Car
+        (Branch, Car) . BranchCar
+
+        class Car {
+            车牌号: String
+            挂甩尾号1: String
+            挂甩尾号2: String
+            挂甩尾号3: String
+            随车手机号: String
+            期望流向开始: String
+            期望流向结束: String
+            车宽: Float
+            车高: Float
+            载重: Float
+            容积: Float
+            车型: String
+            发送机号: String
+            车架号: String
+            车辆注册日期: Date
+            车辆照片: String
+            行驶证: String
+            联系人: String
+            联系人手机号: String
+            认证状态: Integer
+            运输状态: Integer
+        }
+        class Driver {
+            联系人: String
+            手机: String
+            驾驶证号码: String
+            所在地址: String
+        }
+        class CarDriver {
+            carId: String;
+            driver: String;
+        }
+        class BranchCar {
+            branchId: String;
+            carId: String
+        }
+    }
+
+    package repository {
+        CarRepository --|> JpaCrudRepository
+        DriverRepository --|> JpaCrudRepository
+        CarDriverRepository --|> JpaCrudRepository
+        BranchCarRepository --|> JpaCrudRepository
+
+        class JpaCrudRepository {
+            +void insert(domain)
+            +void save(domain)
+            +void delete(domain)
+            +void deleteById(id)
+            +Domain findById(id)
+            +List pageData(currentPage, pageSize, params)
+        }
+    }
+
+    package service {
+        CarService ...> CarRepository
+        DriverService ...> DriverRepository
+        CarDriverService ...> CarDriverRepository
+        BranchCarService ...> BranchCarRepository
+    }
+
+    package controller {
+        BranchController .. CarService
+        BranchController .. DriverService
+        BranchController .. CarDriverService
+        BranchController .. BranchCarService
+
+        class BranchController {
+            -BranchService : BranchService;
+            -BranchParentBranchService : BranchParentBranchService
+            -BranchReviewService : BranchReviewService
+            -BranchLogService : BranchLogService
+
+            +Map add(Branch)
+            +Map remove(id)
+            +Map update(Branch, type)
+            +Page<Branch> pageData(currentPage, pageSize, params)
+
+
+            +Map bindBranch(BranchId, carIds)
+            +Map unBindBranch(BranchId, carIds)
+
+        }
+    }
+}
+
+@enduml
