@@ -10,7 +10,7 @@ import com.wlxk.domain.car.CarReview;
 import com.wlxk.repository.car.CarRepository;
 import com.wlxk.service.car.CarReviewService;
 import com.wlxk.service.car.CarService;
-import com.wlxk.support.exception.TmsBusinessException;
+import com.wlxk.support.exception.TmsDataValidationException;
 import com.wlxk.support.exception.TmsException;
 import com.wlxk.support.util.CommonProperty;
 import com.wlxk.support.util.ResultsUtil;
@@ -59,7 +59,7 @@ public class CarServiceImpl implements CarService {
 
     private void checkAdd(AddCarVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("请求主体对象不能为空!");
+            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
     }
 
@@ -85,19 +85,19 @@ public class CarServiceImpl implements CarService {
 
     private void checkReview(ReviewCarVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("请求主体对象不能为空!");
+            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getCarId())) {
-            throw new TmsBusinessException("车辆编号不能为空!");
+            throw new TmsDataValidationException("车辆编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getReviewById())) {
-            throw new TmsBusinessException("审核人编号不能为空!");
+            throw new TmsDataValidationException("审核人编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getReviewByName())) {
-            throw new TmsBusinessException("审核人名称不能为空!");
+            throw new TmsDataValidationException("审核人名称不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDescription())) {
-            throw new TmsBusinessException("审核说明不能为空!");
+            throw new TmsDataValidationException("审核说明不能为空!");
         }
     }
 
@@ -118,10 +118,10 @@ public class CarServiceImpl implements CarService {
 
     private void checkUpdate(UpdateCarVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("请求主体对象不能为空!");
+            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Objects.isNull(vo.getCar())) {
-            throw new TmsBusinessException("车辆对象不能为空!");
+            throw new TmsDataValidationException("车辆对象不能为空!");
         }
     }
 
@@ -152,10 +152,10 @@ public class CarServiceImpl implements CarService {
 
     private void checkDisuse(DisuseCarVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("请求主体对象不能为空!");
+            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getCarId())) {
-            throw new TmsBusinessException("车辆编号不能为空!");
+            throw new TmsDataValidationException("车辆编号不能为空!");
         }
     }
 }

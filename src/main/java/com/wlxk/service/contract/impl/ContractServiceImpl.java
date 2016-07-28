@@ -14,9 +14,10 @@ import com.wlxk.service.contract.ContractLineService;
 import com.wlxk.service.contract.ContractOperationRecordService;
 import com.wlxk.service.contract.ContractReviewService;
 import com.wlxk.service.contract.ContractService;
-import com.wlxk.support.exception.TmsBusinessException;
+import com.wlxk.support.exception.TmsDataValidationException;
 import com.wlxk.support.exception.TmsException;
 import com.wlxk.support.util.CommonProperty;
+import com.wlxk.support.util.CurrentUserUtils;
 import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,7 @@ public class ContractServiceImpl implements ContractService {
             reviewService.save(ContractReview.newDefaultInstance(contract.getId()));
 
             logger.info("5. 新增操作记录");
-            operationRecordService.save(ContractOperationRecord.newDefaultInstance(contract.getId(), "新增成功!", Boolean.TRUE));
+            operationRecordService.save(ContractOperationRecord.newInstance(vo.getContract().getId(), CurrentUserUtils.getCurrentUser().getId(), CurrentUserUtils.getCurrentUser().getName(), "新增成功!"));
 
         } catch (TmsException e) {
             throw e;
@@ -84,13 +85,13 @@ public class ContractServiceImpl implements ContractService {
 
     private void checkAdd(AddContractVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("请求主体对象不能为空!");
+            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Objects.isNull(vo.getContract())) {
-            throw new TmsBusinessException("合同对象不能为空!");
+            throw new TmsDataValidationException("合同对象不能为空!");
         }
         if (Objects.isNull(vo.getLineList())) {
-            throw new TmsBusinessException("线路集合不能为空!");
+            throw new TmsDataValidationException("线路集合不能为空!");
         }
     }
 
@@ -109,7 +110,7 @@ public class ContractServiceImpl implements ContractService {
             reviewService.save(review);
 
             logger.info("3. 新增操作记录");
-            operationRecordService.save(ContractOperationRecord.newDefaultInstance(vo.getContractId(), "审核成功!", Boolean.TRUE));
+            operationRecordService.save(ContractOperationRecord.newInstance(vo.getContractId(), CurrentUserUtils.getCurrentUser().getId(), CurrentUserUtils.getCurrentUser().getName(), "审核成功!"));
 
         } catch (TmsException e) {
             throw e;
@@ -119,19 +120,19 @@ public class ContractServiceImpl implements ContractService {
 
     private void checkReview(ReviewContractVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("请求主体对象不能为空!");
+            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getContractId())) {
-            throw new TmsBusinessException("合同编号不能为空!");
+            throw new TmsDataValidationException("合同编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getReviewById())) {
-            throw new TmsBusinessException("审核人编号不能为空!");
+            throw new TmsDataValidationException("审核人编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getReviewByName())) {
-            throw new TmsBusinessException("审核人名称不能为空!");
+            throw new TmsDataValidationException("审核人名称不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDescription())) {
-            throw new TmsBusinessException("说明不能为空!");
+            throw new TmsDataValidationException("说明不能为空!");
         }
     }
 
@@ -167,7 +168,7 @@ public class ContractServiceImpl implements ContractService {
             reviewService.save(reviewList);
 
             logger.info("5. 新增操作记录");
-            operationRecordService.save(ContractOperationRecord.newDefaultInstance(vo.getContractId(), "作废成功!", Boolean.TRUE));
+            operationRecordService.save(ContractOperationRecord.newInstance(vo.getContractId(), CurrentUserUtils.getCurrentUser().getId(), CurrentUserUtils.getCurrentUser().getName(), "作废成功!"));
         } catch (TmsException e) {
             throw e;
         }
@@ -176,19 +177,19 @@ public class ContractServiceImpl implements ContractService {
 
     private void checkDisuse(DisuseContractVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("请求主体对象不能为空!");
+            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getContractId())) {
-            throw new TmsBusinessException("合同编号不能为空!");
+            throw new TmsDataValidationException("合同编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDisuseById())) {
-            throw new TmsBusinessException("作废人编号不能为空!");
+            throw new TmsDataValidationException("作废人编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDisuseByName())) {
-            throw new TmsBusinessException("作废人名称不能为空!");
+            throw new TmsDataValidationException("作废人名称不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDescription())) {
-            throw new TmsBusinessException("说明不能为空!");
+            throw new TmsDataValidationException("说明不能为空!");
         }
     }
 
@@ -208,7 +209,7 @@ public class ContractServiceImpl implements ContractService {
             lineService.save(vo.getLineList());
 
             logger.info("5. 新增操作记录");
-            operationRecordService.save(ContractOperationRecord.newDefaultInstance(vo.getContract().getId(), "更新成功!", Boolean.TRUE));
+            operationRecordService.save(ContractOperationRecord.newInstance(vo.getContract().getId(), CurrentUserUtils.getCurrentUser().getId(), CurrentUserUtils.getCurrentUser().getName(), "更新成功!"));
         }catch (TmsException e) {
             throw e;
         }
@@ -217,13 +218,13 @@ public class ContractServiceImpl implements ContractService {
 
     private void checkUpdate(UpdateContractVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("请求主体对象不能为空!");
+            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Objects.isNull(vo.getContract())) {
-            throw new TmsBusinessException("合同对象不能为空!");
+            throw new TmsDataValidationException("合同对象不能为空!");
         }
         if (Objects.isNull(vo.getLineList())) {
-            throw new TmsBusinessException("路线集合不能为空!");
+            throw new TmsDataValidationException("路线集合不能为空!");
         }
     }
 }

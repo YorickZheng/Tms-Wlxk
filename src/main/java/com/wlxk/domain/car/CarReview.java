@@ -22,7 +22,6 @@ public class CarReview extends BasicReview {
         CarReview review = new CarReview();
         review.setCarId(carId);
         review.setStatus(0);
-        review.setSort(0);
         return review;
     }
 

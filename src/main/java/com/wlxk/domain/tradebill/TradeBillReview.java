@@ -22,7 +22,6 @@ public class TradeBillReview extends BasicReview {
         TradeBillReview review = new TradeBillReview();
         review.setTradeBillId(tradeBillId);
         review.setStatus(0);
-        review.setSort(0);
         return review;
     }
 

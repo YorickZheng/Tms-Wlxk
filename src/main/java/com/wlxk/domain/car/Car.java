@@ -2,7 +2,6 @@ package com.wlxk.domain.car;
 
 import com.wlxk.domain.BasicDomain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -38,7 +37,7 @@ public class Car extends BasicDomain {
     /** 高度 */
     private Float height;
     /** 载重 */
-    private Float load;
+    private Float loads;
     /** 容积 */
     private Float volume;
     /** 车辆类型 */
@@ -143,12 +142,12 @@ public class Car extends BasicDomain {
         this.height = height;
     }
 
-    public Float getLoad() {
-        return load;
+    public Float getLoads() {
+        return loads;
     }
 
-    public void setLoad(Float load) {
-        this.load = load;
+    public void setLoads(Float loads) {
+        this.loads = loads;
     }
 
     public Float getVolume() {

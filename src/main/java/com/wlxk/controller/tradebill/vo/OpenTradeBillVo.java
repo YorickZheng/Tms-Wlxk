@@ -3,6 +3,7 @@ package com.wlxk.controller.tradebill.vo;
 import com.wlxk.domain.tradebill.Goods;
 import com.wlxk.domain.tradebill.Losses;
 import com.wlxk.domain.tradebill.TradeBill;
+import com.wlxk.support.vo.BasicOperationVo;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * 开单 Vo
  * Created by malin on 2016/7/22.
  */
-public class OpenTradeBillVo {
+public class OpenTradeBillVo extends BasicOperationVo {
     private TradeBill tradeBill;
     private List<Goods> goodsList;
     private List<Losses> lossesList;

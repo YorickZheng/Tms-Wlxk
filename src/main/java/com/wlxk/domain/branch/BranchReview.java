@@ -22,7 +22,6 @@ public class BranchReview extends BasicReview {
         BranchReview review = new BranchReview();
         review.setBranchId(branchId);
         review.setStatus(0);
-        review.setSort(0);
         return review;
     }
 

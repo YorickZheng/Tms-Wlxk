@@ -24,6 +24,6 @@ public class BranchOperationRecordServiceImpl implements BranchOperationRecordSe
 
     @Override
     public List<BranchOperationRecord> getListByBranchId(String branchId) {
-        return repository.findByBranchId(branchId);
+        return repository.findByBusinessId(branchId);
     }
 }

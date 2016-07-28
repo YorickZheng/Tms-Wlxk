@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface TradeBillOperationRecordService {
     TradeBillOperationRecord save(TradeBillOperationRecord operationRecord);
-    List<TradeBillOperationRecord> getListByTradeBillid(String tradeBillId);
+    List<TradeBillOperationRecord> getListByTradeBillId(String tradeBillId);
 }

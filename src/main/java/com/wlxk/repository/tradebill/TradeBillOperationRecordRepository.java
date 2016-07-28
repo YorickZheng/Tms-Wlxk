@@ -13,5 +13,5 @@ import java.util.List;
  * @date 2016/7/22
  */
 public interface TradeBillOperationRecordRepository extends PagingAndSortingRepository<TradeBillOperationRecord, String> {
-    List<TradeBillOperationRecord> findByTradeBillId(String tradeBillId);
+    List<TradeBillOperationRecord> findByBusinessId(String businessId);
 }

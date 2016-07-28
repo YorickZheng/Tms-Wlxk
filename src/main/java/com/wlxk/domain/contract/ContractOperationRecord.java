@@ -15,22 +15,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tms_contract_operation_record")
 public class ContractOperationRecord extends BasicOperationRecord {
-    /** 合同ID */
-    private String contractId;
-
-    public static ContractOperationRecord newDefaultInstance(String contractId, String description, Boolean status) {
+    public static ContractOperationRecord newInstance(String businessId, String operationById, String operationByName, String description) {
         ContractOperationRecord operationRecord = new ContractOperationRecord();
-        operationRecord.setContractId(contractId);
+        operationRecord.setBusinessId(businessId);
+        operationRecord.setOperationById(operationById);
+        operationRecord.setOperationByName(operationByName);
         operationRecord.setDescription(description);
-        operationRecord.setStatus(status);
         return operationRecord;
-    }
-
-    public String getContractId() {
-        return contractId;
-    }
-
-    public void setContractId(String contractId) {
-        this.contractId = contractId;
     }
 }

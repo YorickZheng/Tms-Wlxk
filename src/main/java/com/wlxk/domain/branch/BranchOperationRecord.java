@@ -15,22 +15,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tms_branch_operation_record")
 public class BranchOperationRecord extends BasicOperationRecord {
-    /** 网点ID */
-    private String branchId;
-
-    public static BranchOperationRecord newDefaultInstance(String branchId, String description, Boolean status) {
+    public static BranchOperationRecord newInstance(String businessId, String operationById, String operationByName, String description) {
         BranchOperationRecord operationRecord = new BranchOperationRecord();
-        operationRecord.setBranchId(branchId);
+        operationRecord.setBusinessId(businessId);
+        operationRecord.setOperationById(operationById);
+        operationRecord.setOperationByName(operationByName);
         operationRecord.setDescription(description);
-        operationRecord.setStatus(status);
         return operationRecord;
-    }
-
-    public String getBranchId() {
-        return branchId;
-    }
-
-    public void setBranchId(String branchId) {
-        this.branchId = branchId;
     }
 }

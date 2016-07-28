@@ -6,9 +6,10 @@ import com.wlxk.controller.branch.vo.*;
 import com.wlxk.domain.branch.*;
 import com.wlxk.repository.branch.BranchRepository;
 import com.wlxk.service.branch.*;
-import com.wlxk.support.exception.TmsBusinessException;
+import com.wlxk.support.exception.TmsDataValidationException;
 import com.wlxk.support.exception.TmsException;
 import com.wlxk.support.util.CommonProperty;
+import com.wlxk.support.util.CurrentUserUtils;
 import com.wlxk.support.util.PageUtil;
 import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class BranchServiceImpl implements BranchService {
             reviewService.save(BranchReview.newDefaultInstance(branchId));
 
             logger.info("6. 开始新增网点操作记录");
-            operationRecordService.save(BranchOperationRecord.newDefaultInstance(branchId, "网点新增成功!", Boolean.TRUE));
+            operationRecordService.save(BranchOperationRecord.newInstance(branchId, CurrentUserUtils.getCurrentUser().getId(), CurrentUserUtils.getCurrentUser().getName(), "新增成功!"));
         } catch (TmsException e) {
             throw e;
         }
@@ -80,16 +81,16 @@ public class BranchServiceImpl implements BranchService {
 
     private void checkAddBranch(AddBranchVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("新增网点请求主体对象不能为空!");
+            throw new TmsDataValidationException("新增网点请求主体对象不能为空!");
         }
         if (Objects.isNull(vo.getBranch())) {
-            throw new TmsBusinessException("网点对象不能为空!");
+            throw new TmsDataValidationException("网点对象不能为空!");
         }
         if (vo.getBranchBankCardList() == null) {
-            throw new TmsBusinessException("银行卡集合对象不能为空!");
+            throw new TmsDataValidationException("银行卡集合对象不能为空!");
         }
         if (vo.getBranchLinkmanList() == null) {
-            throw new TmsBusinessException("联系人集合对象不能为空!");
+            throw new TmsDataValidationException("联系人集合对象不能为空!");
         }
     }
 
@@ -116,7 +117,7 @@ public class BranchServiceImpl implements BranchService {
             linkmanService.save(vo.getBranchLinkmanList());
 
             logger.info("7. 添加修改网点操作记录");
-            operationRecordService.save(BranchOperationRecord.newDefaultInstance(branchId, "网点修改成功!", Boolean.TRUE));
+            operationRecordService.save(BranchOperationRecord.newInstance(vo.getBranch().getId(), CurrentUserUtils.getCurrentUser().getId(), CurrentUserUtils.getCurrentUser().getName(), "修改成功!"));
         } catch (TmsException e) {
             throw e;
         }
@@ -125,13 +126,13 @@ public class BranchServiceImpl implements BranchService {
 
     private void checkUpdateBranch(UpdateBranchVo vo) {
         if (vo == null) {
-            throw new TmsBusinessException("网点修改的请求对象不能为空!");
+            throw new TmsDataValidationException("网点修改的请求对象不能为空!");
         }
         if (vo.getBranch() == null) {
-            throw new TmsBusinessException("网点对象不能为空!");
+            throw new TmsDataValidationException("网点对象不能为空!");
         }
         if (vo.getDescription() == null) {
-            throw new TmsBusinessException("网点修改说明不能为空!");
+            throw new TmsDataValidationException("网点修改说明不能为空!");
         }
     }
 
@@ -175,7 +176,7 @@ public class BranchServiceImpl implements BranchService {
             reviewService.save(branchReviewList);
 
             logger.info("6. 添加网点作废操作数据");
-            operationRecordService.save(BranchOperationRecord.newDefaultInstance(branchId, description, Boolean.TRUE));
+            operationRecordService.save(BranchOperationRecord.newInstance(branchId, CurrentUserUtils.getCurrentUser().getId(), CurrentUserUtils.getCurrentUser().getName(), description));
         } catch (TmsException e) {
             throw e;
         }
@@ -184,19 +185,19 @@ public class BranchServiceImpl implements BranchService {
 
     private void checkDisuseBranch(DisuseBranchVo vo) {
         if (vo == null) {
-            throw new TmsBusinessException("作废网点请求主体对象不能为空!");
+            throw new TmsDataValidationException("作废网点请求主体对象不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getBranchId())) {
-            throw new TmsBusinessException("网点编号不能为空!");
+            throw new TmsDataValidationException("网点编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDisuseById())) {
-            throw new TmsBusinessException("作废人编号不能为空!");
+            throw new TmsDataValidationException("作废人编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDisuseByName())) {
-            throw new TmsBusinessException("作废人名称不能为空!");
+            throw new TmsDataValidationException("作废人名称不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDescription())) {
-            throw new TmsBusinessException("作废说明不能为空!");
+            throw new TmsDataValidationException("作废说明不能为空!");
         }
     }
 
@@ -216,7 +217,7 @@ public class BranchServiceImpl implements BranchService {
             reviewService.save(review);
 
             logger.info("3. 添加操作记录");
-            operationRecordService.save(BranchOperationRecord.newDefaultInstance(branchId, "审核成功!", Boolean.TRUE));
+            operationRecordService.save(BranchOperationRecord.newInstance(branchId, CurrentUserUtils.getCurrentUser().getId(), CurrentUserUtils.getCurrentUser().getName(), "审核成功!"));
         } catch (TmsException e) {
             throw e;
         }
@@ -225,19 +226,19 @@ public class BranchServiceImpl implements BranchService {
 
     private void checkReview(ReviewBranchVo vo) {
         if (Objects.isNull(vo)) {
-            throw new TmsBusinessException("审核请求主体对象不能为空!");
+            throw new TmsDataValidationException("审核请求主体对象不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getBranchId())) {
-            throw new TmsBusinessException("网点编号不能为空!");
+            throw new TmsDataValidationException("网点编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getPersonalById())) {
-            throw new TmsBusinessException("审核人编号不能为空!");
+            throw new TmsDataValidationException("审核人编号不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getPersonal())) {
-            throw new TmsBusinessException("审核人不能为空!");
+            throw new TmsDataValidationException("审核人不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getDescription())) {
-            throw new TmsBusinessException("审核说明不能为空!");
+            throw new TmsDataValidationException("审核说明不能为空!");
         }
     }
 

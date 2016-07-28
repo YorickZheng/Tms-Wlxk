@@ -13,5 +13,5 @@ import java.util.List;
  * @date 2016/7/26
  */
 public interface BranchOperationRecordRepository extends PagingAndSortingRepository<BranchOperationRecord, String> {
-    List<BranchOperationRecord> findByBranchId(String branchId);
+    List<BranchOperationRecord> findByBusinessId(String businessId);
 }

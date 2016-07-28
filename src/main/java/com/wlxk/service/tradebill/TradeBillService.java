@@ -75,5 +75,5 @@ public interface TradeBillService {
      * @param tradeBillPage
      * @return
      */
-    Page<TradeBillView> getTradeBillViewPage(Page<TradeBill> tradeBillPage);
+    Map getTradeBillViewPage(Page<TradeBill> tradeBillPage);
 }

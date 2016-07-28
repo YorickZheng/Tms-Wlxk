@@ -11,6 +11,7 @@ public class ResultsUtil {
         Map<String, Object> result = new HashMap<>();
         result.put("flag", true);
         result.put("data", data);
+        result.put("code", CommonProperty.HttpCode.SUCCESS_200);
         return result;
     }
 
@@ -18,6 +19,16 @@ public class ResultsUtil {
         Map<String, Object> result = new HashMap<>();
         result.put("flag", false);
         result.put("data", data);
+        result.put("code", CommonProperty.HttpCode.EXCEPTION);
         return result;
     }
+
+    public static Map getFailureResultMap(Object data, String code) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("flag", false);
+        result.put("data", data);
+        result.put("code", code);
+        return result;
+    }
+
 }

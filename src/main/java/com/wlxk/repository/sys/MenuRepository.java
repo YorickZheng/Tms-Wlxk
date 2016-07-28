@@ -1,7 +1,9 @@
 package com.wlxk.repository.sys;
 
 import com.wlxk.domain.sys.Menu;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import com.wlxk.support.CustomRepository;
+
+import java.util.List;
 
 /**
  * 菜单仓储层
@@ -10,5 +12,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * @version 1.0
  * @date 2016/7/22
  */
-public interface MenuRepository extends PagingAndSortingRepository<Menu, String> {
+public interface MenuRepository extends CustomRepository<Menu, String> {
+    List<Menu> findByParentMenuId(String parentMenuId);
 }

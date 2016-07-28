@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class TradeBillOperationRecordServiceImpl implements TradeBillOperationRecordService {
 
-    @Autowired
+    @Autowired(required = false)
     private TradeBillOperationRecordRepository tradeBillOperationRecordRepository;
 
     @Override
@@ -23,7 +23,7 @@ public class TradeBillOperationRecordServiceImpl implements TradeBillOperationRe
     }
 
     @Override
-    public List<TradeBillOperationRecord> getListByTradeBillid(String tradeBillId) {
-        return tradeBillOperationRecordRepository.findByTradeBillId(tradeBillId);
+    public List<TradeBillOperationRecord> getListByTradeBillId(String tradeBillId) {
+        return tradeBillOperationRecordRepository.findByBusinessId(tradeBillId);
     }
 }

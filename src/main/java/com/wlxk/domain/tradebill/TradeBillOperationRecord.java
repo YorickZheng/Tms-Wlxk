@@ -15,22 +15,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tms_trade_bill_operation_record")
 public class TradeBillOperationRecord extends BasicOperationRecord {
-    /** 交易单ID */
-    private String tradeBillId;
-
-    public static TradeBillOperationRecord newDefaultInstance(String tradeBillId, String description, Boolean status) {
+    public static TradeBillOperationRecord newInstance(String businessId, String operationById, String operationByName, String description) {
         TradeBillOperationRecord operationRecord = new TradeBillOperationRecord();
-        operationRecord.setTradeBillId(tradeBillId);
+        operationRecord.setBusinessId(businessId);
+        operationRecord.setOperationById(operationById);
+        operationRecord.setOperationByName(operationByName);
         operationRecord.setDescription(description);
-        operationRecord.setStatus(status);
         return operationRecord;
-    }
-
-    public String getTradeBillId() {
-        return tradeBillId;
-    }
-
-    public void setTradeBillId(String tradeBillId) {
-        this.tradeBillId = tradeBillId;
     }
 }

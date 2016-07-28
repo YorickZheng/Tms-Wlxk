@@ -22,7 +22,6 @@ public class ContractReview extends BasicReview {
         ContractReview review = new ContractReview();
         review.setContractId(contractId);
         review.setStatus(0);
-        review.setSort(0);
         return review;
     }
 

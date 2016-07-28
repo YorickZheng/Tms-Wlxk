@@ -11,14 +11,39 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class BasicOperationRecord extends BasicDomain {
-    /** 操作人ID */
+    /**
+     * 业务ID
+     */
+    private String businessId;
+    /**
+     * 操作人ID
+     */
     private String operationById;
-    /** 操作人名称 */
+    /**
+     * 操作人名称
+     */
     private String operationByName;
-    /** 说明 */
+    /**
+     * 说明
+     */
     private String description;
-    /** 状态 */
-    private Boolean status = Boolean.TRUE;
+
+    public static BasicOperationRecord newInstance(String businessId, String operationById, String operationByName, String description) {
+        BasicOperationRecord operationRecord = new BasicOperationRecord();
+        operationRecord.setBusinessId(businessId);
+        operationRecord.setOperationById(operationById);
+        operationRecord.setOperationByName(operationByName);
+        operationRecord.setDescription(description);
+        return operationRecord;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
 
     public String getOperationById() {
         return operationById;
@@ -44,11 +69,4 @@ public class BasicOperationRecord extends BasicDomain {
         this.description = description;
     }
 
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
 }

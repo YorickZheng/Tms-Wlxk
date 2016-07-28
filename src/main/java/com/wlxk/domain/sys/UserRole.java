@@ -20,6 +20,18 @@ public class UserRole extends BasicDomain {
     /** 角色编号 */
     private String roleId;
 
+    public UserRole() {
+    }
+
+    public UserRole(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public UserRole(String userId, String roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
+
     public String getUserId() {
         return userId;
     }
