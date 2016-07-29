@@ -25,10 +25,10 @@ public class Menu extends BasicDomain {
     private String imageUrl;
     /** 说明 */
     private String description;
-    /** 登记 */
-    private Integer level;
-    /** 父菜单编号 */
-    private String parentMenuId;
+    /** 等级 */
+    private Integer level = 0;
+    /** 父菜单Id */
+    private String parentMenuId = "0";
 
     public String getName() {
         return name;

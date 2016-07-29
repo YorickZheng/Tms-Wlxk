@@ -1,6 +1,7 @@
 package com.wlxk.service.sys;
 
 import com.wlxk.domain.sys.UserOperationRecord;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @version 1.0
  * @date 2016/7/27
  */
+@Transactional
 public interface UserOperationRecordService {
     UserOperationRecord save(UserOperationRecord operationRecord);
     Iterable<UserOperationRecord> save(List<UserOperationRecord> list);

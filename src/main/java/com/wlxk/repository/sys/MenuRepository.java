@@ -14,4 +14,5 @@ import java.util.List;
  */
 public interface MenuRepository extends CustomRepository<Menu, String> {
     List<Menu> findByParentMenuId(String parentMenuId);
+    List<Menu> findByIdIn(List<String> ids);
 }

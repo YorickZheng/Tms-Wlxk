@@ -53,15 +53,20 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    public List<Menu> getListById(List<String> ids) {
+        return repository.findByIdIn(ids);
+    }
+
+    @Override
     public List<Menu> getListByParentMenuId(String parentMenuId) {
         return repository.findByParentMenuId(parentMenuId);
     }
 
     @Override
-    public Map addMenu(AddMenuVo vo) {
+    public Map add(AddMenuVo vo) {
         try {
             logger.info("1. 数据校验");
-            addMenuByDataValidation(vo);
+            addByDataValidation(vo);
 
             logger.info("2. 新增菜单");
             Menu menu = save(vo.getMenu());
@@ -78,45 +83,12 @@ public class MenuServiceImpl implements MenuService {
         return ResultsUtil.getSuccessResultMap("新增成功!");
     }
 
-    private void addMenuByDataValidation(AddMenuVo vo) {
+    private void addByDataValidation(AddMenuVo vo) {
         if (Objects.isNull(vo)) {
             throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Objects.isNull(vo.getMenu())) {
             throw new TmsDataValidationException("菜单对象不能为空!");
-        }
-    }
-
-    @Override
-    public Map disuseMenu(DisuseMenuVo vo) {
-        try {
-            logger.info("1. 数据校验");
-            disuseMenuByDataValidation(vo);
-
-            logger.info("2. 作废菜单");
-            String menuId = vo.getBusinessId();
-            Menu menu = getOneById(menuId);
-            menu.setDeleteFlag(CommonProperty.DeleteFlag.DELETE_OFF);
-            menu.setModifyById(vo.getOperationById());
-            menu.setModifyByName(vo.getOperationByName());
-            menu.setModifyByDate(Calendar.getInstance().getTime());
-            save(menu);
-
-            logger.info("3. 新增操作记录");
-            operationRecordService.save(MenuOperationRecord.newInstance(vo.getBusinessId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
-        } catch (TmsDataValidationException e) {
-            logger.error("数据校验异常!", e);
-            throw e;
-        } catch (Exception e) {
-            logger.error("作废失败!", e);
-            throw e;
-        }
-        return ResultsUtil.getSuccessResultMap("作废成功!");
-    }
-
-    private void disuseMenuByDataValidation(DisuseMenuVo vo) {
-        if (Objects.isNull(vo)) {
-            throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getOperationById())) {
             throw new TmsDataValidationException("操作人ID不能为空!");
@@ -130,16 +102,75 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Map updateMenu(UpdateMenuVo vo) {
+    public Map disuse(DisuseMenuVo vo) {
         try {
             logger.info("1. 数据校验");
-            updateMenuByDataValidation(vo);
+            disuseByDataValidation(vo);
 
-            logger.info("2. 更新数据");
-            save(vo.getMenu());
+            logger.info("2. " + (vo.getCommand() == CommonProperty.DisuseCommand.DISUSE ? "作废" : "取消作废") + "菜单");
+            String menuId = vo.getBusinessId();
+            Menu menu = getOneById(menuId);
+            if (CommonProperty.DisuseCommand.DISUSE == vo.getCommand()) {
+                menu.setDeleteFlag(CommonProperty.DeleteFlag.DELETE_OFF);
+            } else if (CommonProperty.DisuseCommand.DISUSE_CANCEL == vo.getCommand()) {
+                menu.setDeleteFlag(CommonProperty.DeleteFlag.DELETE_ON);
+            }
+            menu.setModifyById(vo.getOperationById());
+            menu.setModifyByName(vo.getOperationByName());
+            menu.setModifyByDate(Calendar.getInstance().getTime());
+            save(menu);
 
             logger.info("3. 新增操作记录");
             operationRecordService.save(MenuOperationRecord.newInstance(vo.getBusinessId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error((vo.getCommand() == CommonProperty.DisuseCommand.DISUSE ? "作废" : "取消作废") + "失败!", e);
+            throw e;
+        }
+        return ResultsUtil.getSuccessResultMap((vo.getCommand() == CommonProperty.DisuseCommand.DISUSE ? "作废" : "取消作废") + "成功!");
+    }
+
+    private void disuseByDataValidation(DisuseMenuVo vo) {
+        if (Objects.isNull(vo)) {
+            throw new TmsDataValidationException("请求主体对象不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getBusinessId())) {
+            throw new TmsDataValidationException("业务ID不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationById())) {
+            throw new TmsDataValidationException("操作人ID不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationByName())) {
+            throw new TmsDataValidationException("操作人名称不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getDescription())) {
+            throw new TmsDataValidationException("操作说明不能为空!");
+        }
+        if (Objects.isNull(vo.getCommand())) {
+            throw new TmsDataValidationException("命令不能为空!");
+        }
+        if (!Ints.contains(CommonProperty.DisuseCommand.COMMANDS, vo.getCommand())) {
+            throw new TmsDataValidationException("命令无效!");
+        }
+    }
+
+    @Override
+    public Map update(UpdateMenuVo vo) {
+        try {
+            logger.info("1. 数据校验");
+            updateByDataValidation(vo);
+
+            logger.info("2. 更新数据");
+            Menu menu = vo.getMenu();
+            menu.setModifyById(vo.getOperationById());
+            menu.setModifyByName(vo.getOperationByName());
+            menu.setModifyByDate(Calendar.getInstance().getTime());
+            save(menu);
+
+            logger.info("3. 新增操作记录");
+            operationRecordService.save(MenuOperationRecord.newInstance(menu.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
             throw e;
@@ -150,7 +181,7 @@ public class MenuServiceImpl implements MenuService {
         return ResultsUtil.getSuccessResultMap("更新成功!");
     }
 
-    private void updateMenuByDataValidation(UpdateMenuVo vo) {
+    private void updateByDataValidation(UpdateMenuVo vo) {
         if (Objects.isNull(vo)) {
             throw new TmsDataValidationException("请求主体对象不能为空!");
         }
@@ -195,10 +226,10 @@ public class MenuServiceImpl implements MenuService {
             throw new TmsDataValidationException("请求主体对象不能为空!");
         }
         if (Objects.isNull(vo.getCommand())) {
-            throw new TmsDataValidationException("作废命令不能为空!");
+            throw new TmsDataValidationException("命令不能为空!");
         }
         if (!Ints.contains(CommonProperty.MenuQueryCommand.COMMANDS, vo.getCommand())) {
-            throw new TmsDataValidationException("作废命令无效!");
+            throw new TmsDataValidationException("命令无效!");
         }
         if (CommonProperty.MenuQueryCommand.QUERY_BY_ID == vo.getCommand()) {
             if (Strings.isNullOrEmpty(vo.getMenuId())) {

@@ -22,6 +22,23 @@ public class Role extends BasicDomain {
     /** 说明 */
     private String description;
 
+    public static Role getInstance(String name, String code, String description) {
+        Role role = new Role();
+        role.setName(name);
+        role.setCode(code);
+        role.setDescription(description);
+        return role;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
     public String getName() {
         return name;
     }

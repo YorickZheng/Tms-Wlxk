@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务层实现
@@ -186,10 +187,14 @@ public class UserServiceImpl implements UserService {
             updateByDataValidation(vo);
 
             logger.info("2. 更新用户");
-            save(vo.getUser());
+            User user = vo.getUser();
+            user.setModifyById(vo.getOperationById());
+            user.setModifyByName(vo.getOperationByName());
+            user.setModifyByDate(Calendar.getInstance().getTime());
+            save(user);
 
             logger.info("3. 添加操作记录");
-            operationRecordService.save(UserOperationRecord.newInstance(vo.getBusinessId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            operationRecordService.save(UserOperationRecord.newInstance(user.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
             throw e;
@@ -203,9 +208,6 @@ public class UserServiceImpl implements UserService {
     private void updateByDataValidation(UpdateUserVo vo) {
         if (Objects.isNull(vo)) {
             throw new TmsDataValidationException("请求主体对象不能为空!");
-        }
-        if (Strings.isNullOrEmpty(vo.getBusinessId())) {
-            throw new TmsDataValidationException("业务ID不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getOperationById())) {
             throw new TmsDataValidationException("操作人ID不能为空!");
@@ -232,11 +234,7 @@ public class UserServiceImpl implements UserService {
         page.getContent().forEach(user -> {
             String userId = user.getId();
             List<UserRole> userRoleList = userRoleService.getListByUserId(userId);
-            List<String> roleIdList = Lists.newArrayList();
-            for (UserRole userRole : userRoleList) {
-                roleIdList.add(userRole.getRoleId());
-            }
-            List<Role> roleList = roleService.getListById(roleIdList);
+            List<Role> roleList = roleService.getListById(userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList()));
             List<UserOperationRecord> operationRecords = operationRecordService.getListByUserId(userId);
             content.add(UserView.newInstance(user, userRoleList, roleList, operationRecords));
         });

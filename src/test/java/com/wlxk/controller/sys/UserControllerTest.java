@@ -115,4 +115,8 @@ public class UserControllerTest {
         assertEquals("错误，正确的返回值为200", 200, status);
         System.out.println(content);
     }
+
+    public void testPage() throws Exception {
+
+    }
 }

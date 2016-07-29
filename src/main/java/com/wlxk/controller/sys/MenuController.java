@@ -37,7 +37,7 @@ public class MenuController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Map add(@RequestBody AddMenuVo vo) {
         try {
-            return menuService.addMenu(vo);
+            return menuService.add(vo);
         } catch (TmsDataValidationException e) {
             logger.error(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
@@ -56,7 +56,7 @@ public class MenuController {
     @RequestMapping(value = "/disuse", method = RequestMethod.POST)
     public Map disuse(@RequestBody DisuseMenuVo vo) {
         try {
-            return menuService.disuseMenu(vo);
+            return menuService.disuse(vo);
         } catch (TmsDataValidationException e) {
             logger.error(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
@@ -75,7 +75,7 @@ public class MenuController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Map update(@RequestBody UpdateMenuVo vo) {
         try {
-            return menuService.updateMenu(vo);
+            return menuService.update(vo);
         } catch (TmsDataValidationException e) {
             logger.error(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

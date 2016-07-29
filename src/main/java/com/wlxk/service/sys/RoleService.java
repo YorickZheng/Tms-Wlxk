@@ -1,9 +1,10 @@
 package com.wlxk.service.sys;
 
-import com.wlxk.controller.sys.vo.role.AddRoleVo;
-import com.wlxk.controller.sys.vo.role.DisuseRoleVo;
-import com.wlxk.controller.sys.vo.role.UpdateRoleVo;
+import com.wlxk.controller.sys.vo.role.*;
 import com.wlxk.domain.sys.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -11,13 +12,18 @@ import java.util.Map;
 /**
  * Created by malin on 2016/7/28.
  */
+@Transactional
 public interface RoleService {
     Role save(Role role);
     Iterable<Role> save(List<Role> list);
     Role getOneById(String id);
     List<Role> getListById(List<String> idList);
 
-    Map addRole(AddRoleVo vo);
-    Map disuseRole(DisuseRoleVo vo);
-    Map updateRole(UpdateRoleVo vo);
+    Map add(AddRoleVo vo);
+    Map disuse(DisuseRoleVo vo);
+    Map update(UpdateRoleVo vo);
+
+    Page<Role> getPage(Pageable pageable, Map<String, Object> params);
+
+    Map getPageView(QueryRoleVo vo);
 }

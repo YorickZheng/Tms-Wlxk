@@ -1,29 +1,37 @@
 package com.wlxk.service.sys.impl;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
-import com.wlxk.controller.sys.vo.role.AddRoleVo;
-import com.wlxk.controller.sys.vo.role.DisuseRoleVo;
-import com.wlxk.controller.sys.vo.role.UpdateRoleVo;
+import com.wlxk.controller.sys.vo.role.*;
+import com.wlxk.domain.sys.Menu;
 import com.wlxk.domain.sys.Role;
 import com.wlxk.domain.sys.RoleMenu;
 import com.wlxk.domain.sys.RoleOperationRecord;
 import com.wlxk.repository.sys.RoleRepository;
+import com.wlxk.repository.sys.specs.RoleSpecs;
+import com.wlxk.service.sys.MenuService;
 import com.wlxk.service.sys.RoleMenuService;
 import com.wlxk.service.sys.RoleOperationRecordService;
 import com.wlxk.service.sys.RoleService;
 import com.wlxk.support.exception.TmsDataValidationException;
 import com.wlxk.support.util.CommonProperty;
+import com.wlxk.support.util.PageUtil;
 import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by malin on 2016/7/28.
@@ -35,10 +43,10 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired(required = false)
     private RoleRepository repository;
-    // 角色菜单 service
     @Autowired(required = false)
     private RoleMenuService roleMenuService;
-    // 角色操作记录 service
+    @Autowired(required = false)
+    private MenuService menuService;
     @Autowired(required = false)
     private RoleOperationRecordService operationRecordService;
 
@@ -64,7 +72,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Map addRole(AddRoleVo vo) {
+    public Map add(AddRoleVo vo) {
         try {
             logger.info("1. 数据校验");
             addRoleByDataValidation(vo);
@@ -98,10 +106,19 @@ public class RoleServiceImpl implements RoleService {
         if (Objects.isNull(vo.getRole())) {
             throw new TmsDataValidationException("角色对象为空!");
         }
+        if (Strings.isNullOrEmpty(vo.getOperationById())) {
+            throw new TmsDataValidationException("操作人ID不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationByName())) {
+            throw new TmsDataValidationException("操作人名称不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getDescription())) {
+            throw new TmsDataValidationException("操作说明不能为空!");
+        }
     }
 
     @Override
-    public Map disuseRole(DisuseRoleVo vo) {
+    public Map disuse(DisuseRoleVo vo) {
         try {
             logger.info("1. 数据校验");
             disuseRoleByDataValidation(vo);
@@ -161,24 +178,28 @@ public class RoleServiceImpl implements RoleService {
             throw new TmsDataValidationException("操作说明不能为空!");
         }
         if (Objects.isNull(vo.getCommand())) {
-            throw new TmsDataValidationException("作废命令不能为空!");
+            throw new TmsDataValidationException("命令不能为空!");
         }
         if (!Ints.contains(CommonProperty.DisuseCommand.COMMANDS, vo.getCommand())) {
-            throw new TmsDataValidationException("作废命令无效!");
+            throw new TmsDataValidationException("命令无效!");
         }
     }
 
     @Override
-    public Map updateRole(UpdateRoleVo vo) {
+    public Map update(UpdateRoleVo vo) {
         try {
             logger.info("1. 数据校验");
             updateRoleByDataValidation(vo);
 
             logger.info("2. 更新角色");
-            save(vo.getRole());
+            Role role = vo.getRole();
+            role.setModifyById(vo.getOperationById());
+            role.setModifyByName(vo.getOperationByName());
+            role.setModifyByDate(Calendar.getInstance().getTime());
+            save(role);
 
             logger.info("3. 添加操作记录");
-            operationRecordService.save(RoleOperationRecord.newInstance(vo.getBusinessId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            operationRecordService.save(RoleOperationRecord.newInstance(role.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
             throw e;
@@ -193,9 +214,6 @@ public class RoleServiceImpl implements RoleService {
         if (Objects.isNull(vo)) {
             throw new TmsDataValidationException("请求主体对象不能为空!");
         }
-        if (Strings.isNullOrEmpty(vo.getBusinessId())) {
-            throw new TmsDataValidationException("业务ID不能为空!");
-        }
         if (Strings.isNullOrEmpty(vo.getOperationById())) {
             throw new TmsDataValidationException("操作人ID不能为空!");
         }
@@ -207,6 +225,64 @@ public class RoleServiceImpl implements RoleService {
         }
         if (Objects.isNull(vo.getRole())) {
             throw new TmsDataValidationException("角色对象不能为空!");
+        }
+    }
+
+    @Override
+    public Page<Role> getPage(Pageable pageable, Map<String, Object> params) {
+        return repository.findAll(RoleSpecs.rolePageSpecs(params), pageable);
+    }
+
+    @Override
+    public Map getPageView(QueryRoleVo vo) {
+        try {
+            logger.info("1. 数据校验");
+            getPageViewByDataValidation(vo);
+
+            logger.info("2. 查询主表");
+            PageRequest request = new PageRequest(vo.getPage(), vo.getSize(), new Sort(vo.getDirection(), vo.getSortList()));
+            Page<Role> page = getPage(request, vo.getParams());
+
+            logger.info("3. 查询子表");
+            List<RoleView> content = Lists.newArrayList();
+            page.getContent().forEach(role -> {
+                String roleId = role.getId();
+                List<RoleMenu> roleMenuList = roleMenuService.getListByRoleId(roleId);
+                List<String> menuIds = roleMenuList.stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+                List<Menu> menuList = menuService.getListById(menuIds);
+                content.add(RoleView.newInstance(role, menuList));
+            });
+
+            logger.info("4. 组装数据返回");
+            return ResultsUtil.getSuccessResultMap(PageUtil.newInstancePage(page, content));
+
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询失败!", e);
+            throw e;
+        }
+    }
+
+    private void getPageViewByDataValidation(QueryRoleVo vo) {
+        if (Objects.isNull(vo)) {
+            throw new TmsDataValidationException("请求主体对象不能为空!");
+        }
+        if (Objects.isNull(vo.getParams())) {
+            throw new TmsDataValidationException("查询参数列表不能为空!");
+        }
+        if (Objects.isNull(vo.getPage())) {
+            throw new TmsDataValidationException("起始页不能为空!");
+        }
+        if (Objects.isNull(vo.getSize())) {
+            throw new TmsDataValidationException("每页数量不能为空!");
+        }
+        if (Objects.isNull(vo.getDirection())) {
+            throw new TmsDataValidationException("排序方式不能为空!");
+        }
+        if (Objects.isNull(vo.getSortList())) {
+            throw new TmsDataValidationException("排序集合不能为空!");
         }
     }
 }

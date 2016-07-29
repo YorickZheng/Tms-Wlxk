@@ -20,6 +20,13 @@ public class RoleMenu extends BasicDomain {
     /** 菜单编号 */
     private String menuId;
 
+    public static RoleMenu getInstance(String roleId, String menuId) {
+        RoleMenu roleMenu = new RoleMenu();
+        roleMenu.setRoleId(roleId);
+        roleMenu.setMenuId(menuId);
+        return roleMenu;
+    }
+
     public String getRoleId() {
         return roleId;
     }

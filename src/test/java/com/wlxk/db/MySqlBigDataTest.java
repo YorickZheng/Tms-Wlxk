@@ -38,4 +38,29 @@ public class MySqlBigDataTest {
         conn.close();
         System.out.println("结束时间:" + DateUtil.dateToString(new Date()));
     }
+
+    @Test
+    public void testRole() throws Exception {
+        System.out.println("开始时间:" + DateUtil.dateToString(new Date()));
+        String url = "jdbc:mysql://139.196.177.90/qmy-tms?user=root&password=root&useUnicode=true&characterEncoding=UTF-8";
+        Connection conn = DriverManager.getConnection(url);
+        conn.setAutoCommit(false);
+        PreparedStatement ps = conn.prepareStatement("");
+        String sqlPrefix = "INSERT INTO sys_role (id, name, code, description) VALUES";
+        StringBuilder sqlSuffix = new StringBuilder();
+        for (int i = 1; i <= 1; i++) {
+            for (int j = 10; j <= 20; j++) {
+                sqlSuffix.append("('"+UUID.randomUUID().toString()+"', '角色"+j+"', 'CODE"+j+"', '测试数据'),");
+            }
+            String sql = sqlPrefix + sqlSuffix.substring(0, sqlSuffix.length() - 1);
+            ps.addBatch(sql);
+            ps.executeBatch();
+            conn.commit();
+            sqlSuffix = new StringBuilder();
+            System.out.println("第" + i +"次结束时间:" + DateUtil.dateToString(new Date()));
+        }
+        ps.close();
+        conn.close();
+        System.out.println("结束时间:" + DateUtil.dateToString(new Date()));
+    }
 }
