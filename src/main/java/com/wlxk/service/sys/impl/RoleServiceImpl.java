@@ -229,8 +229,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Page<Role> getPage(Pageable pageable, Map<String, Object> params) {
-        return repository.findAll(RoleSpecs.rolePageSpecs(params), pageable);
+    public Page<Role> getPage(QueryRoleVo vo) {
+        PageRequest request = new PageRequest(vo.getPage(), vo.getSize(), new Sort(vo.getDirection(), vo.getSortList()));
+        return repository.findAll(RoleSpecs.rolePageSpecs(vo.getParams()), request);
     }
 
     @Override
@@ -240,8 +241,7 @@ public class RoleServiceImpl implements RoleService {
             getPageViewByDataValidation(vo);
 
             logger.info("2. 查询主表");
-            PageRequest request = new PageRequest(vo.getPage(), vo.getSize(), new Sort(vo.getDirection(), vo.getSortList()));
-            Page<Role> page = getPage(request, vo.getParams());
+            Page<Role> page = getPage(vo);
 
             logger.info("3. 查询子表");
             List<RoleView> content = Lists.newArrayList();
@@ -255,7 +255,6 @@ public class RoleServiceImpl implements RoleService {
 
             logger.info("4. 组装数据返回");
             return ResultsUtil.getSuccessResultMap(PageUtil.newInstancePage(page, content));
-
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
             throw e;

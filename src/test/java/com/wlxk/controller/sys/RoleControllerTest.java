@@ -123,12 +123,13 @@ public class RoleControllerTest {
     @Test
     public void testPageView() throws Exception {
         Map<String, Object> params = Maps.newConcurrentMap();
-        params.put("name", "角色");
+        params.put("name", "管理员");
 
         QueryRoleVo vo = new QueryRoleVo();
         vo.setParams(params);
         vo.setPage(1);
-        vo.setSize(10);
+        vo.setSize(1);
+        vo.setSortList(Lists.newArrayList("id", "createByDate"));
 
         doPost(vo, "/role/pageView");
     }

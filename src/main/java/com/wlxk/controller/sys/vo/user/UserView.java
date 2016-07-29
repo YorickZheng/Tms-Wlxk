@@ -12,14 +12,12 @@ import java.util.List;
  */
 public class UserView {
     private User user;
-    private List<UserRole> userRoleList;
     private List<Role> roleList;
     private List<UserOperationRecord> operationRecordList;
     
-    public static UserView newInstance(User user, List<UserRole> userRoleList, List<Role> roleList, List<UserOperationRecord> operationRecordList) {
+    public static UserView newInstance(User user, List<Role> roleList, List<UserOperationRecord> operationRecordList) {
         UserView view = new UserView();
         view.setUser(user);
-        view.setUserRoleList(userRoleList);
         view.setRoleList(roleList);
         view.setOperationRecordList(operationRecordList);
         return view;
@@ -31,14 +29,6 @@ public class UserView {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<UserRole> getUserRoleList() {
-        return userRoleList;
-    }
-
-    public void setUserRoleList(List<UserRole> userRoleList) {
-        this.userRoleList = userRoleList;
     }
 
     public List<Role> getRoleList() {

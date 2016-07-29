@@ -3,9 +3,11 @@ package com.wlxk.controller.sys;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.wlxk.TmsApplication;
 import com.wlxk.controller.sys.vo.user.AddUserVo;
 import com.wlxk.controller.sys.vo.user.DisuseUserVo;
+import com.wlxk.controller.sys.vo.user.QueryUserVo;
 import com.wlxk.controller.sys.vo.user.UpdateUserVo;
 import com.wlxk.domain.sys.User;
 import com.wlxk.domain.sys.UserRole;
@@ -22,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,7 +62,7 @@ public class UserControllerTest {
         vo.setOperationByName("管理员");
         vo.setDescription("新增用户!");
         vo.setUser(new User("MaLin", "123456", "马林"));
-        vo.setUserRoleList(Lists.newArrayList(new UserRole("123"), new UserRole("456")));
+        vo.setUserRoleList(Lists.newArrayList(new UserRole("402883945631ad9d015631adb6ec0000"), new UserRole("186d6f4f-62d3-4583-990e-781ffa92e345")));
 
         MvcResult result = mockMvc.perform(
                 post("/user/add", "json")
@@ -116,7 +120,24 @@ public class UserControllerTest {
         System.out.println(content);
     }
 
+    @Test
     public void testPage() throws Exception {
+        Map<String, Object> params = Maps.newConcurrentMap();
+        params.put("username", "Ma");
 
+        QueryUserVo vo = new QueryUserVo();
+        vo.setParams(params);
+
+
+        MvcResult result = mockMvc.perform(
+                post("/user/pageView", "json")
+                        .characterEncoding("UTF-8")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(obj2Json(vo)))
+                .andReturn();
+        int status = result.getResponse().getStatus();
+        String content = result.getResponse().getContentAsString();
+        assertEquals("错误，正确的返回值为200", 200, status);
+        System.out.println(content);
     }
 }

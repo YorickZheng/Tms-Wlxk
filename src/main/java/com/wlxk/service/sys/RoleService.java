@@ -23,7 +23,7 @@ public interface RoleService {
     Map disuse(DisuseRoleVo vo);
     Map update(UpdateRoleVo vo);
 
-    Page<Role> getPage(Pageable pageable, Map<String, Object> params);
+    Page<Role> getPage(QueryRoleVo vo);
 
     Map getPageView(QueryRoleVo vo);
 }

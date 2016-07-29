@@ -97,10 +97,10 @@ public class UserController {
      * @param vo 请求数据
      * @return 结果
      */
-    @RequestMapping(value = "/pageData", method = RequestMethod.POST)
-    public Map userViewPage(@RequestBody QueryUserVo vo) {
+    @RequestMapping(value = "/pageView", method = RequestMethod.POST)
+    public Map userPageView(@RequestBody QueryUserVo vo) {
         try {
-            return userService.getUserViewPage(userService.getUserPage(vo, vo.getPage(), vo.getSize()));
+            return userService.getPageView(vo);
         } catch (TmsDataValidationException e) {
             logger.error(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

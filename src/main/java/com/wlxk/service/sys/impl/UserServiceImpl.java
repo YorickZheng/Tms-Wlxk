@@ -1,8 +1,6 @@
 package com.wlxk.service.sys.impl;
 
-import com.fasterxml.jackson.databind.util.ArrayIterator;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
 import com.wlxk.controller.sys.vo.user.*;
@@ -11,6 +9,7 @@ import com.wlxk.domain.sys.User;
 import com.wlxk.domain.sys.UserOperationRecord;
 import com.wlxk.domain.sys.UserRole;
 import com.wlxk.repository.sys.UserRepository;
+import com.wlxk.repository.sys.specs.UserSpecs;
 import com.wlxk.service.sys.RoleService;
 import com.wlxk.service.sys.UserOperationRecordService;
 import com.wlxk.service.sys.UserRoleService;
@@ -24,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -224,20 +224,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> getUserPage(QueryUserVo vo, Integer page, Integer size) {
-        return repository.findByAuto(vo.getUser(), new PageRequest(page, size));
+    public Page<User> getPage(QueryUserVo vo) {
+        PageRequest request = new PageRequest(vo.getPage(), vo.getSize(), new Sort(vo.getDirection(), vo.getSortList()));
+        return repository.findAll(UserSpecs.rolePageSpecs(vo.getParams()), request);
     }
 
     @Override
-    public Map getUserViewPage(Page<User> page) {
-        List<UserView> content = Lists.newArrayList();
-        page.getContent().forEach(user -> {
-            String userId = user.getId();
-            List<UserRole> userRoleList = userRoleService.getListByUserId(userId);
-            List<Role> roleList = roleService.getListById(userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList()));
-            List<UserOperationRecord> operationRecords = operationRecordService.getListByUserId(userId);
-            content.add(UserView.newInstance(user, userRoleList, roleList, operationRecords));
-        });
-        return ResultsUtil.getSuccessResultMap(PageUtil.newInstancePage(page, content));
+    public Map getPageView(QueryUserVo vo) {
+
+        try {
+            logger.info("1. 数据校验");
+            getPageViewByDataValidation(vo);
+
+            logger.info("2. 查询主表");
+            Page<User> page = getPage(vo);
+
+            logger.info("3. 查询子表");
+            List<UserView> content = Lists.newArrayList();
+            page.getContent().forEach(user -> {
+                String userId = user.getId();
+                List<UserRole> userRoleList = userRoleService.getListByUserId(userId);
+                List<String> roleIdList = userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+                List<Role> roleList = roleService.getListById(roleIdList);
+                List<UserOperationRecord> operationRecordList = operationRecordService.getListByUserId(userId);
+                content.add(UserView.newInstance(user, roleList, operationRecordList));
+            });
+
+            logger.info("4. 组装数据返回");
+            return ResultsUtil.getSuccessResultMap(PageUtil.newInstancePage(page, content));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询失败!", e);
+            throw e;
+        }
     }
+
+    private void getPageViewByDataValidation(QueryUserVo vo) {
+        if (Objects.isNull(vo)) {
+            throw new TmsDataValidationException("请求主体对象不能为空!");
+        }
+        if (Objects.isNull(vo.getParams())) {
+            throw new TmsDataValidationException("查询参数列表不能为空!");
+        }
+        if (Objects.isNull(vo.getPage())) {
+            throw new TmsDataValidationException("起始页不能为空!");
+        }
+        if (Objects.isNull(vo.getSize())) {
+            throw new TmsDataValidationException("每页数量不能为空!");
+        }
+        if (Objects.isNull(vo.getDirection())) {
+            throw new TmsDataValidationException("排序方式不能为空!");
+        }
+        if (Objects.isNull(vo.getSortList())) {
+            throw new TmsDataValidationException("排序集合不能为空!");
+        }
+    }
+
+
 }
