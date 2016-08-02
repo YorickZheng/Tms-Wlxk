@@ -29,11 +29,11 @@ public class CarReviewServiceImpl implements CarReviewService {
 
     @Override
     public CarReview getOneByCarId(String carId) {
-        return repository.findOneByCarId(carId);
+        return repository.findOneByBusinessId(carId);
     }
 
     @Override
     public List<CarReview> getListByCarId(String carId) {
-        return repository.findByCarId(carId);
+        return repository.findByBusinessId(carId);
     }
 }

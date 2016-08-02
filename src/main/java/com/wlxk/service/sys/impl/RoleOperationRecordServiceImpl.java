@@ -6,6 +6,8 @@ import com.wlxk.service.sys.RoleOperationRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by malin on 2016/7/28.
  */
@@ -18,5 +20,10 @@ public class RoleOperationRecordServiceImpl implements RoleOperationRecordServic
     @Override
     public RoleOperationRecord save(RoleOperationRecord operationRecord) {
         return repository.save(operationRecord);
+    }
+
+    @Override
+    public List<RoleOperationRecord> getListByRoleId(String roleId) {
+        return repository.findByBusinessId(roleId);
     }
 }

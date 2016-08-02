@@ -26,6 +26,15 @@ public class ContractLine extends BasicDomain {
     /** 结束站 */
     private String endStation;
 
+    public static ContractLine newInstance(String branchId, String convertCompanyName, String startStation, String endStation) {
+        ContractLine line = new ContractLine();
+        line.setBranchId(branchId);
+        line.setConvertCompanyName(convertCompanyName);
+        line.setStartStation(startStation);
+        line.setEndStation(endStation);
+        return line;
+    }
+
     public String getContractId() {
         return contractId;
     }

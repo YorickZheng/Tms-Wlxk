@@ -11,14 +11,34 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class BasicReview extends BasicDomain {
-    /** 审核人ID */
+    /**
+     * 业务ID
+     */
+    private String businessId;
+    /**
+     * 审核人ID
+     */
     private String reviewById;
-    /** 审核人名称 */
-    private String reviewByPerson;
-    /** 说明 */
+    /**
+     * 审核人名称
+     */
+    private String reviewByName;
+    /**
+     * 说明
+     */
     private String description;
-    /** 审核状态 */
+    /**
+     * 审核状态
+     */
     private Integer status;
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
 
     public String getReviewById() {
         return reviewById;
@@ -28,12 +48,12 @@ public class BasicReview extends BasicDomain {
         this.reviewById = reviewById;
     }
 
-    public String getReviewByPerson() {
-        return reviewByPerson;
+    public String getReviewByName() {
+        return reviewByName;
     }
 
-    public void setReviewByPerson(String reviewByPerson) {
-        this.reviewByPerson = reviewByPerson;
+    public void setReviewByName(String reviewByName) {
+        this.reviewByName = reviewByName;
     }
 
     public String getDescription() {

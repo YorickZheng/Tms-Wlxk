@@ -1,6 +1,7 @@
 package com.wlxk.service.sys.impl;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
 import com.wlxk.controller.sys.vo.menu.AddMenuVo;
 import com.wlxk.controller.sys.vo.menu.DisuseMenuVo;
@@ -19,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by malin on 2016/7/28.
@@ -53,13 +51,18 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<Menu> getListById(List<String> ids) {
-        return repository.findByIdIn(ids);
+    public List<Menu> getListById(List<String> idList) {
+        return repository.findByIdIn(idList);
     }
 
     @Override
     public List<Menu> getListByParentMenuId(String parentMenuId) {
         return repository.findByParentMenuId(parentMenuId);
+    }
+
+    @Override
+    public Iterable<Menu> getAll() {
+        return repository.findAll();
     }
 
     @Override
@@ -110,6 +113,9 @@ public class MenuServiceImpl implements MenuService {
             logger.info("2. " + (vo.getCommand() == CommonProperty.DisuseCommand.DISUSE ? "作废" : "取消作废") + "菜单");
             String menuId = vo.getBusinessId();
             Menu menu = getOneById(menuId);
+            if (Objects.isNull(menu)) {
+                throw new TmsDataValidationException(menuId + "菜单为空!");
+            }
             if (CommonProperty.DisuseCommand.DISUSE == vo.getCommand()) {
                 menu.setDeleteFlag(CommonProperty.DeleteFlag.DELETE_OFF);
             } else if (CommonProperty.DisuseCommand.DISUSE_CANCEL == vo.getCommand()) {
@@ -154,6 +160,7 @@ public class MenuServiceImpl implements MenuService {
         if (!Ints.contains(CommonProperty.DisuseCommand.COMMANDS, vo.getCommand())) {
             throw new TmsDataValidationException("命令无效!");
         }
+
     }
 
     @Override
@@ -209,7 +216,7 @@ public class MenuServiceImpl implements MenuService {
             if (vo.getCommand() == CommonProperty.MenuQueryCommand.QUERY_BY_ID) {
                 return ResultsUtil.getSuccessResultMap(getOneById(vo.getMenuId()));
             } else if (vo.getCommand() == CommonProperty.MenuQueryCommand.QUERY_BY_PARENT_ID) {
-                return ResultsUtil.getSuccessResultMap(getListByParentMenuId(vo.getParentMenuId()));
+                return ResultsUtil.getSuccessResultMap(getListByParentMenuId(vo.getMenuId()));
             }
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
@@ -231,15 +238,14 @@ public class MenuServiceImpl implements MenuService {
         if (!Ints.contains(CommonProperty.MenuQueryCommand.COMMANDS, vo.getCommand())) {
             throw new TmsDataValidationException("命令无效!");
         }
-        if (CommonProperty.MenuQueryCommand.QUERY_BY_ID == vo.getCommand()) {
-            if (Strings.isNullOrEmpty(vo.getMenuId())) {
-                throw new TmsDataValidationException("菜单ID不能为空!");
-            }
+        if (Strings.isNullOrEmpty(vo.getMenuId())) {
+            throw new TmsDataValidationException("菜单ID不能为空!");
         }
-        if (CommonProperty.MenuQueryCommand.QUERY_BY_PARENT_ID == vo.getCommand()) {
-            if (Strings.isNullOrEmpty(vo.getParentMenuId())) {
-                throw new TmsDataValidationException("菜单父ID不能为空!");
-            }
-        }
+    }
+
+    @Override
+    public Map queryByCode(String code) {
+        Menu menu = repository.findOneByCode(code);
+        return ResultsUtil.getSuccessResultMap(menu);
     }
 }

@@ -28,11 +28,11 @@ public class BranchReviewServiceImpl implements BranchReviewService {
 
     @Override
     public BranchReview getOneByBranchId(String branchId) {
-        return repository.findOneByBranchId(branchId);
+        return repository.findOneByBusinessId(branchId);
     }
 
     @Override
     public List<BranchReview> getListByBranchId(String branchId) {
-        return repository.findByBranchId(branchId);
+        return repository.findByBusinessId(branchId);
     }
 }

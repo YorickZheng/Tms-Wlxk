@@ -23,6 +23,8 @@ public class BranchView {
         view.setBranch(branch);
         view.setBankCardList(bankCardList);
         view.setLinkmenList(linkmenList);
+        view.setOperationRecordList(operationRecordList);
+        view.setReviewList(reviewList);
 
         return view;
     }

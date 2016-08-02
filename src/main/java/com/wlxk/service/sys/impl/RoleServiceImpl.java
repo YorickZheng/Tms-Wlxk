@@ -198,6 +198,21 @@ public class RoleServiceImpl implements RoleService {
             role.setModifyByDate(Calendar.getInstance().getTime());
             save(role);
 
+            logger.info("3. 角色菜单关联操作");
+            if (!Objects.isNull(vo.getRoleMenuList())) {
+                logger.info("3-1. 删除关联");
+                roleMenuService.deleteByRoleId(role.getId());
+
+                logger.info("3-2. 新增关联");
+                List<RoleMenu> roleMenuList = vo.getRoleMenuList();
+                roleMenuList.forEach(roleMenu -> {
+                    roleMenu.setRoleId(role.getId());
+                });
+                roleMenuService.save(roleMenuList);
+            } else {
+                logger.info("无关联数据");
+            }
+
             logger.info("3. 添加操作记录");
             operationRecordService.save(RoleOperationRecord.newInstance(role.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
         } catch (TmsDataValidationException e) {
@@ -250,7 +265,8 @@ public class RoleServiceImpl implements RoleService {
                 List<RoleMenu> roleMenuList = roleMenuService.getListByRoleId(roleId);
                 List<String> menuIds = roleMenuList.stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
                 List<Menu> menuList = menuService.getListById(menuIds);
-                content.add(RoleView.newInstance(role, menuList));
+                List<RoleOperationRecord> operationRecordList = operationRecordService.getListByRoleId(role.getId());
+                content.add(RoleView.newInstance(role, roleMenuList, menuList, operationRecordList));
             });
 
             logger.info("4. 组装数据返回");
@@ -282,6 +298,24 @@ public class RoleServiceImpl implements RoleService {
         }
         if (Objects.isNull(vo.getSortList())) {
             throw new TmsDataValidationException("排序集合不能为空!");
+        }
+    }
+
+    @Override
+    public Map queryByCode(String code) {
+        try {
+            Role role = repository.findOneByCode(code);
+            List<RoleMenu> roleMenuList = roleMenuService.getListByRoleId(role.getId());
+            List<String> menuIds = roleMenuList.stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+            List<Menu> menuList = menuService.getListById(menuIds);
+            List<RoleOperationRecord> operationRecordList = operationRecordService.getListByRoleId(role.getId());
+            return ResultsUtil.getSuccessResultMap(RoleView.newInstance(role, roleMenuList, menuList, operationRecordList));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询失败!", e);
+            throw e;
         }
     }
 }

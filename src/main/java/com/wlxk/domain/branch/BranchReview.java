@@ -1,6 +1,7 @@
 package com.wlxk.domain.branch;
 
 import com.wlxk.domain.BasicReview;
+import com.wlxk.support.util.CommonProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,21 +16,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tms_branch_review")
 public class BranchReview extends BasicReview {
-    /** 网点ID */
-    private String branchId;
 
-    public static BranchReview newDefaultInstance(String branchId) {
+    public static BranchReview newDefaultInstance(String businessId) {
         BranchReview review = new BranchReview();
-        review.setBranchId(branchId);
-        review.setStatus(0);
+        review.setBusinessId(businessId);
+        review.setStatus(CommonProperty.ReviewStatus.UNAUDITED);
         return review;
-    }
-
-    public String getBranchId() {
-        return branchId;
-    }
-
-    public void setBranchId(String branchId) {
-        this.branchId = branchId;
     }
 }

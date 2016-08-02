@@ -28,7 +28,17 @@ public class RoleMenuServiceImpl implements RoleMenuService {
     }
 
     @Override
+    public void deleteByRoleId(String roleId) {
+        repository.deleteByRoleId(roleId);
+    }
+
+    @Override
     public List<RoleMenu> getListByRoleId(String roleId) {
         return repository.findByRoleId(roleId);
+    }
+
+    @Override
+    public List<RoleMenu> getListByRoleIdList(List<String> roleIdList) {
+        return repository.findByRoleIdIn(roleIdList);
     }
 }

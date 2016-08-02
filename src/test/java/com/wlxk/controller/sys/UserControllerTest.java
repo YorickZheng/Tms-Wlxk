@@ -123,7 +123,7 @@ public class UserControllerTest {
     @Test
     public void testPage() throws Exception {
         Map<String, Object> params = Maps.newConcurrentMap();
-        params.put("username", "Ma");
+        params.put("username", "MaXZX");
 
         QueryUserVo vo = new QueryUserVo();
         vo.setParams(params);

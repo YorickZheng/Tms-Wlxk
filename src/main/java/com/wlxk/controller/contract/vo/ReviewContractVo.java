@@ -1,43 +1,18 @@
 package com.wlxk.controller.contract.vo;
 
+import com.wlxk.support.vo.BasicOperationVo;
+
 /**
  * Created by malin on 2016/7/26.
  */
-public class ReviewContractVo {
-    private String contractId;
-    private String reviewById;
-    private String reviewByName;
-    private String description;
+public class ReviewContractVo extends BasicOperationVo {
+    private Integer command;
 
-    public String getContractId() {
-        return contractId;
+    public Integer getCommand() {
+        return command;
     }
 
-    public void setContractId(String contractId) {
-        this.contractId = contractId;
-    }
-
-    public String getReviewById() {
-        return reviewById;
-    }
-
-    public void setReviewById(String reviewById) {
-        this.reviewById = reviewById;
-    }
-
-    public String getReviewByName() {
-        return reviewByName;
-    }
-
-    public void setReviewByName(String reviewByName) {
-        this.reviewByName = reviewByName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCommand(Integer command) {
+        this.command = command;
     }
 }

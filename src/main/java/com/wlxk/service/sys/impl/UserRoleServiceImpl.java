@@ -32,6 +32,11 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    public void deleteByUserId(String userId) {
+        repository.deleteByUserId(userId);
+    }
+
+    @Override
     public List<UserRole> getListByUserId(String userId) {
         return repository.findByUserId(userId);
     }

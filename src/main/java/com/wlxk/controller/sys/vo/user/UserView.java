@@ -1,9 +1,6 @@
 package com.wlxk.controller.sys.vo.user;
 
-import com.wlxk.domain.sys.Role;
-import com.wlxk.domain.sys.User;
-import com.wlxk.domain.sys.UserOperationRecord;
-import com.wlxk.domain.sys.UserRole;
+import com.wlxk.domain.sys.*;
 
 import java.util.List;
 
@@ -13,12 +10,27 @@ import java.util.List;
 public class UserView {
     private User user;
     private List<Role> roleList;
+    private List<Menu> menuList;
     private List<UserOperationRecord> operationRecordList;
     
-    public static UserView newInstance(User user, List<Role> roleList, List<UserOperationRecord> operationRecordList) {
+    public static UserView newInstance(User user,
+                                       List<Role> roleList,
+                                       List<UserOperationRecord> operationRecordList) {
         UserView view = new UserView();
         view.setUser(user);
         view.setRoleList(roleList);
+        view.setOperationRecordList(operationRecordList);
+        return view;
+    }
+
+    public static UserView newInstance(User user,
+                                       List<Role> roleList,
+                                       List<Menu> menuList,
+                                       List<UserOperationRecord> operationRecordList) {
+        UserView view = new UserView();
+        view.setUser(user);
+        view.setRoleList(roleList);
+        view.setMenuList(menuList);
         view.setOperationRecordList(operationRecordList);
         return view;
     }
@@ -45,5 +57,13 @@ public class UserView {
 
     public void setOperationRecordList(List<UserOperationRecord> operationRecordList) {
         this.operationRecordList = operationRecordList;
+    }
+
+    public List<Menu> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<Menu> menuList) {
+        this.menuList = menuList;
     }
 }

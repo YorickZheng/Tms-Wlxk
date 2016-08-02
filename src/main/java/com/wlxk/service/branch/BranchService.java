@@ -59,21 +59,8 @@ public interface BranchService {
      */
     Map review(ReviewBranchVo vo);
 
-    /**
-     * 单表多条件分页查询
-     *
-     * @param branch
-     * @param page
-     * @param size
-     * @return
-     */
-    Page<Branch> getBranchPage(Branch branch, Integer page, Integer size);
+    Page<Branch> pageData(QueryBranchVo vo);
 
-    /**
-     * 多表多条件分页查询
-     *
-     * @param branchPage
-     * @return
-     */
-    Page<BranchView> getBranchViewPage(Page<Branch> branchPage);
+    Map pageDataView(QueryBranchVo vo);
+
 }

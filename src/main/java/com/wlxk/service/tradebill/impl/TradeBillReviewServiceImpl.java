@@ -28,11 +28,11 @@ public class TradeBillReviewServiceImpl implements TradeBillReviewService {
 
     @Override
     public TradeBillReview getOneTradeBillReview(String tradeBillId) {
-        return tradeBillReviewRepository.findOneByTradeBillId(tradeBillId);
+        return tradeBillReviewRepository.findOneByBusinessId(tradeBillId);
     }
 
     @Override
     public List<TradeBillReview> getListByTradeBillId(String tradeBillId) {
-        return tradeBillReviewRepository.findByTradeBillId(tradeBillId);
+        return tradeBillReviewRepository.findByBusinessId(tradeBillId);
     }
 }

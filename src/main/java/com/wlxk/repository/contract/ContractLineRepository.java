@@ -14,4 +14,5 @@ import java.util.List;
  */
 public interface ContractLineRepository extends PagingAndSortingRepository<ContractLine, String> {
     List<ContractLine> findByContractId(String contractId);
+    void deleteByContractId(String contractId);
 }

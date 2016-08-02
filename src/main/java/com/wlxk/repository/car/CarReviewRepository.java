@@ -13,6 +13,6 @@ import java.util.List;
  * @date 2016/7/26
  */
 public interface CarReviewRepository extends PagingAndSortingRepository<CarReview, String> {
-    List<CarReview> findByCarId(String carId);
-    CarReview findOneByCarId(String carId);
+    List<CarReview> findByBusinessId(String businessId);
+    CarReview findOneByBusinessId(String businessId);
 }

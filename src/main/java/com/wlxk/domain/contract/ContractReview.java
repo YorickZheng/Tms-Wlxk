@@ -1,6 +1,8 @@
 package com.wlxk.domain.contract;
 
 import com.wlxk.domain.BasicReview;
+import com.wlxk.domain.tradebill.TradeBillReview;
+import com.wlxk.support.util.CommonProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,21 +17,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tms_contract_review")
 public class ContractReview extends BasicReview {
-    /** 合同ID */
-    private String contractId;
-
-    public static ContractReview newDefaultInstance(String contractId) {
+    public static ContractReview newDefaultInstance(String businessId) {
         ContractReview review = new ContractReview();
-        review.setContractId(contractId);
-        review.setStatus(0);
+        review.setBusinessId(businessId);
+        review.setStatus(CommonProperty.ReviewStatus.UNAUDITED);
         return review;
-    }
-
-    public String getContractId() {
-        return contractId;
-    }
-
-    public void setContractId(String contractId) {
-        this.contractId = contractId;
     }
 }

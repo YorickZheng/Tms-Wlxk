@@ -11,10 +11,7 @@ import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -98,9 +95,28 @@ public class UserController {
      * @return 结果
      */
     @RequestMapping(value = "/pageView", method = RequestMethod.POST)
-    public Map userPageView(@RequestBody QueryUserVo vo) {
+    public Map pageView(@RequestBody QueryUserVo vo) {
         try {
             return userService.getPageView(vo);
+        } catch (TmsDataValidationException e) {
+            logger.error(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    /**
+     * 通过username查询用户
+     *
+     * @param username
+     * @return
+     */
+    @RequestMapping(value = "/{username}", method = RequestMethod.GET)
+    public Map byUsername(@PathVariable String username) {
+        try {
+            return userService.findByUsername(username);
         } catch (TmsDataValidationException e) {
             logger.error(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

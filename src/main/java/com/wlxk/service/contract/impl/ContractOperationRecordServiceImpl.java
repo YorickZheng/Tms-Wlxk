@@ -6,6 +6,8 @@ import com.wlxk.service.contract.ContractOperationRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by malin on 2016/7/26.
  */
@@ -18,5 +20,10 @@ public class ContractOperationRecordServiceImpl implements ContractOperationReco
     @Override
     public ContractOperationRecord save(ContractOperationRecord operationRecord) {
         return repository.save(operationRecord);
+    }
+
+    @Override
+    public List<ContractOperationRecord> getListByBusinessId(String businessId) {
+        return repository.findByBusinessId(businessId);
     }
 }

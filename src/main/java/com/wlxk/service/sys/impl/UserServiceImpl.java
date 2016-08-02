@@ -3,17 +3,12 @@ package com.wlxk.service.sys.impl;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
+import com.wlxk.controller.sys.vo.role.RoleView;
 import com.wlxk.controller.sys.vo.user.*;
-import com.wlxk.domain.sys.Role;
-import com.wlxk.domain.sys.User;
-import com.wlxk.domain.sys.UserOperationRecord;
-import com.wlxk.domain.sys.UserRole;
+import com.wlxk.domain.sys.*;
 import com.wlxk.repository.sys.UserRepository;
 import com.wlxk.repository.sys.specs.UserSpecs;
-import com.wlxk.service.sys.RoleService;
-import com.wlxk.service.sys.UserOperationRecordService;
-import com.wlxk.service.sys.UserRoleService;
-import com.wlxk.service.sys.UserService;
+import com.wlxk.service.sys.*;
 import com.wlxk.support.exception.TmsDataValidationException;
 import com.wlxk.support.util.CommonProperty;
 import com.wlxk.support.util.PageUtil;
@@ -52,9 +47,20 @@ public class UserServiceImpl implements UserService {
     // 角色 service
     @Autowired(required = false)
     private RoleService roleService;
+    // 角色菜单关联 service
+    @Autowired(required = false)
+    private RoleMenuService roleMenuService;
+    // 菜单 service
+    @Autowired(required = false)
+    private MenuService menuService;
     // 用户操作记录 service
     @Autowired(required = false)
     private UserOperationRecordService operationRecordService;
+
+    @Override
+    public User findByUsernameAndPassword(String username, String password) {
+        return repository.findOneByUsernameAndPassword(username, password);
+    }
 
     @Override
     public User save(User user) {
@@ -173,10 +179,10 @@ public class UserServiceImpl implements UserService {
             throw new TmsDataValidationException("操作说明不能为空!");
         }
         if (Objects.isNull(vo.getCommand())) {
-            throw new TmsDataValidationException("作废命令不能为空!");
+            throw new TmsDataValidationException("命令不能为空!");
         }
         if (!Ints.contains(CommonProperty.DisuseCommand.COMMANDS, vo.getCommand())) {
-            throw new TmsDataValidationException("作废命令无效!");
+            throw new TmsDataValidationException("命令无效!");
         }
     }
 
@@ -192,6 +198,21 @@ public class UserServiceImpl implements UserService {
             user.setModifyByName(vo.getOperationByName());
             user.setModifyByDate(Calendar.getInstance().getTime());
             save(user);
+
+            logger.info("3. 用户角色关联操作");
+            if (!Objects.isNull(vo.getUserRoleList())) {
+                logger.info("3-1. 删除用户角色关联");
+                userRoleService.deleteByUserId(vo.getUser().getId());
+
+                logger.info("3-2. 新增用户角色关联");
+                List<UserRole> userRoleList = vo.getUserRoleList();
+                userRoleList.forEach(userRole -> {
+                    userRole.setUserId(user.getId());
+                });
+                userRoleService.save(userRoleList);
+            } else {
+                logger.info("无用户角色关联操作");
+            }
 
             logger.info("3. 添加操作记录");
             operationRecordService.save(UserOperationRecord.newInstance(user.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
@@ -226,7 +247,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> getPage(QueryUserVo vo) {
         PageRequest request = new PageRequest(vo.getPage(), vo.getSize(), new Sort(vo.getDirection(), vo.getSortList()));
-        return repository.findAll(UserSpecs.rolePageSpecs(vo.getParams()), request);
+        return repository.findAll(UserSpecs.userPageSpecs(vo.getParams()), request);
     }
 
     @Override
@@ -282,5 +303,45 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Map findByUsername(String username) {
+        try {
+            User user = repository.findOneByUsername(username);
+            List<String> roleIdList = userRoleService.getListByUserId(user.getId()).stream().map(UserRole::getRoleId).collect(Collectors.toList());
+            List<Role> roleList = roleService.getListById(roleIdList);
+            List<UserOperationRecord> operationRecordList = operationRecordService.getListByUserId(user.getId());
+
+            return ResultsUtil.getSuccessResultMap(UserView.newInstance(user, roleList, operationRecordList));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询失败!", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public Map getByUsernameAndPassword(String username, String password) {
+        try {
+            User user = findByUsernameAndPassword(username, password);
+            if (Objects.isNull(user)) {
+                throw new TmsDataValidationException("账号密码错误!");
+            }
+            List<String> roleIdList = userRoleService.getListByUserId(user.getId()).stream().map(UserRole::getRoleId).collect(Collectors.toList());
+            List<Role> roleList = roleService.getListById(roleIdList);
+            List<String> menuIdList = roleMenuService.getListByRoleIdList(roleIdList).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+            List<Menu> menuList = menuService.getListById(menuIdList);
+            List<UserOperationRecord> operationRecordList = operationRecordService.getListByUserId(user.getId());
+
+            return ResultsUtil.getSuccessResultMap(UserView.newInstance(user, roleList, menuList, operationRecordList));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询失败!", e);
+            throw e;
+        }
+    }
 
 }

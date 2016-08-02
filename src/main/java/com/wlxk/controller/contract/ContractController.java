@@ -1,10 +1,13 @@
 package com.wlxk.controller.contract;
 
-import com.wlxk.controller.contract.vo.AddContractVo;
-import com.wlxk.controller.contract.vo.DisuseContractVo;
-import com.wlxk.controller.contract.vo.ReviewContractVo;
-import com.wlxk.controller.contract.vo.UpdateContractVo;
+import com.wlxk.controller.contract.vo.*;
+import com.wlxk.controller.tradebill.TradeBillController;
 import com.wlxk.service.contract.ContractService;
+import com.wlxk.support.exception.TmsDataValidationException;
+import com.wlxk.support.util.CommonProperty;
+import com.wlxk.support.util.ResultsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/contract")
 public class ContractController {
+    private static final Logger logger = LoggerFactory.getLogger(ContractController.class);
+
     @Autowired(required = false)
     private ContractService contractService;
 
@@ -32,8 +37,12 @@ public class ContractController {
     public Map add(@RequestBody AddContractVo vo) {
         try {
             return contractService.add(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
         } catch (Exception e) {
-            throw e;
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 
@@ -47,8 +56,12 @@ public class ContractController {
     public Map review(@RequestBody ReviewContractVo vo) {
         try {
             return contractService.review(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
         } catch (Exception e) {
-            throw e;
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 
@@ -58,11 +71,16 @@ public class ContractController {
      * @param vo
      * @return
      */
+    @RequestMapping(value = "/disuse", method = RequestMethod.POST)
     public Map disuse(@RequestBody DisuseContractVo vo) {
         try {
             return contractService.disuse(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
         } catch (Exception e) {
-            throw e;
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 
@@ -76,8 +94,31 @@ public class ContractController {
     public Map update(@RequestBody UpdateContractVo vo) {
         try {
             return contractService.update(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
         } catch (Exception e) {
-            throw e;
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    /**
+     * 视图分页
+     *
+     * @param vo
+     * @return
+     */
+    @RequestMapping(value = "/pageView", method = RequestMethod.POST)
+    public Map pageView(@RequestBody QueryContractVo vo) {
+        try {
+            return contractService.pageView(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 }

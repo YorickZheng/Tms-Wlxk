@@ -12,5 +12,7 @@ import java.util.List;
 public interface RoleMenuService {
     RoleMenu save(RoleMenu roleMenu);
     Iterable<RoleMenu> save(List<RoleMenu> list);
+    void deleteByRoleId(String roleId);
     List<RoleMenu> getListByRoleId(String roleId);
+    List<RoleMenu> getListByRoleIdList(List<String> roleIdList);
 }

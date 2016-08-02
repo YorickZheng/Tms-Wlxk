@@ -20,6 +20,9 @@ import java.util.Map;
  */
 @Transactional
 public interface UserService {
+
+    User findByUsernameAndPassword(String username, String password);
+
     User save(User user);
 
     User getOneById(String id);
@@ -33,4 +36,8 @@ public interface UserService {
     Page<User> getPage(QueryUserVo vo);
 
     Map getPageView(QueryUserVo vo);
+
+    Map findByUsername(String username);
+
+    Map getByUsernameAndPassword(String username, String password);
 }

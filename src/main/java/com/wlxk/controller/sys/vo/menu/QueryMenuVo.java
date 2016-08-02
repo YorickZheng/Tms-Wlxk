@@ -8,7 +8,6 @@ import com.wlxk.support.vo.BasicOperationVo;
  */
 public class QueryMenuVo {
     private String menuId;
-    private String parentMenuId;
     private Integer command;
 
     public String getMenuId() {
@@ -17,14 +16,6 @@ public class QueryMenuVo {
 
     public void setMenuId(String menuId) {
         this.menuId = menuId;
-    }
-
-    public String getParentMenuId() {
-        return parentMenuId;
-    }
-
-    public void setParentMenuId(String parentMenuId) {
-        this.parentMenuId = parentMenuId;
     }
 
     public Integer getCommand() {

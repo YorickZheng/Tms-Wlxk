@@ -2,13 +2,14 @@ package com.wlxk.controller.contract.vo;
 
 import com.wlxk.domain.contract.Contract;
 import com.wlxk.domain.contract.ContractLine;
+import com.wlxk.support.vo.BasicOperationVo;
 
 import java.util.List;
 
 /**
  * Created by malin on 2016/7/26.
  */
-public class AddContractVo {
+public class AddContractVo extends BasicOperationVo {
     private Contract contract;
     private List<ContractLine> lineList;
 

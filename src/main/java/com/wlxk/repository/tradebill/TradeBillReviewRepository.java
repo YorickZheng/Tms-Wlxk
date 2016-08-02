@@ -13,6 +13,6 @@ import java.util.List;
  * @date 2016/7/22
  */
 public interface TradeBillReviewRepository extends PagingAndSortingRepository<TradeBillReview, String> {
-    TradeBillReview findOneByTradeBillId(String tradeBillId);
-    List<TradeBillReview> findByTradeBillId(String tradeBillId);
+    TradeBillReview findOneByBusinessId(String businessId);
+    List<TradeBillReview> findByBusinessId(String businessId);
 }

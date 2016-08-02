@@ -14,4 +14,5 @@ import java.util.List;
  */
 public interface DriverRepository extends PagingAndSortingRepository<Driver, String> {
     List<Driver> findByCarId(String carId);
+    void deleteByCarId(String carId);
 }

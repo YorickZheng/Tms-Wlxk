@@ -15,21 +15,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tms_car_review")
 public class CarReview extends BasicReview {
-    /** 车辆ID */
-    private String carId;
 
-    public static CarReview newDefaultInstance(String carId) {
+    public static CarReview newDefaultInstance(String businessId) {
         CarReview review = new CarReview();
-        review.setCarId(carId);
+        review.setBusinessId(businessId);
         review.setStatus(0);
         return review;
-    }
-
-    public String getCarId() {
-        return carId;
-    }
-
-    public void setCarId(String carId) {
-        this.carId = carId;
     }
 }

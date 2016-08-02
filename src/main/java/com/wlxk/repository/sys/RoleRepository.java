@@ -15,4 +15,5 @@ import java.util.List;
  */
 public interface RoleRepository extends PagingAndSortingRepository<Role, String>, JpaSpecificationExecutor<Role> {
     List<Role> findByIdIn(List<String> idList);
+    Role findOneByCode(String code);
 }

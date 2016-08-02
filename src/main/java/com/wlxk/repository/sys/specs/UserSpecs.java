@@ -19,18 +19,18 @@ import static com.google.common.collect.Iterables.toArray;
  * Created by malin on 2016/7/29.
  */
 public class UserSpecs {
-    public static Specification<User> rolePageSpecs(Map<String, Object> params) {
+    public static Specification<User> userPageSpecs(Map<String, Object> params) {
         return new Specification<User>() {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = Lists.newArrayList();
+                String username = (String) params.get("username");
+                if (!Strings.isNullOrEmpty(username)) {
+                    predicates.add(cb.like(root.get("username"), pattern(username)));
+                }
                 String name = (String) params.get("name");
                 if (!Strings.isNullOrEmpty(name)) {
                     predicates.add(cb.like(root.get("name"), pattern(name)));
-                }
-                String code = (String) params.get("code");
-                if (!Strings.isNullOrEmpty(code)) {
-                    predicates.add(cb.like(root.get("code"), pattern(code)));
                 }
                 return cb.and(toArray(predicates, Predicate.class));
             }

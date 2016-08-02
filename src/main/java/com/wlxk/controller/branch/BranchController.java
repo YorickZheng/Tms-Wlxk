@@ -1,8 +1,14 @@
 package com.wlxk.controller.branch;
 
 import com.wlxk.controller.branch.vo.*;
+import com.wlxk.controller.contract.ContractController;
 import com.wlxk.domain.branch.Branch;
 import com.wlxk.service.branch.BranchService;
+import com.wlxk.support.exception.TmsDataValidationException;
+import com.wlxk.support.util.CommonProperty;
+import com.wlxk.support.util.ResultsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +24,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/branch")
 public class BranchController {
+    private static final Logger logger = LoggerFactory.getLogger(BranchController.class);
+
     @Autowired(required = false)
     private BranchService branchService;
 
@@ -31,8 +39,12 @@ public class BranchController {
     public Map add(@RequestBody AddBranchVo vo) {
         try {
             return branchService.add(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
         } catch (Exception e) {
-            throw e;
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 
@@ -46,8 +58,12 @@ public class BranchController {
     public Map disuse(@RequestBody DisuseBranchVo vo) {
         try {
             return branchService.disuse(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
         } catch (Exception e) {
-            throw e;
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 
@@ -61,8 +77,12 @@ public class BranchController {
     public Map update(@RequestBody UpdateBranchVo vo) {
         try {
             return branchService.update(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
         } catch (Exception e) {
-            throw e;
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 
@@ -76,8 +96,12 @@ public class BranchController {
     public Map review(@RequestBody ReviewBranchVo vo) {
         try {
             return branchService.review(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
         } catch (Exception e) {
-            throw e;
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 
@@ -87,13 +111,16 @@ public class BranchController {
      * @param vo 查询条件
      * @return 查询结果
      */
-    @RequestMapping(value = "/getBranchPage", method = RequestMethod.POST)
-    public Page<BranchView> getBranchPage(@RequestBody QueryBranchVo vo) {
+    @RequestMapping(value = "/pageView", method = RequestMethod.POST)
+    public Map pageView(@RequestBody QueryBranchVo vo) {
         try {
-            Page<Branch> page = branchService.getBranchPage(vo.getBranch(), vo.getPage(), vo.getSize());
-            return branchService.getBranchViewPage(page);
-        } catch (Exception e){
-            throw e;
+            return branchService.pageDataView(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
         }
     }
 }

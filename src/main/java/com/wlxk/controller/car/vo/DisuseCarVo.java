@@ -1,16 +1,18 @@
 package com.wlxk.controller.car.vo;
 
+import com.wlxk.support.vo.BasicOperationVo;
+
 /**
  * Created by malin on 2016/7/26.
  */
-public class DisuseCarVo {
-    private String carId;
+public class DisuseCarVo extends BasicOperationVo {
+    private Integer command;
 
-    public String getCarId() {
-        return carId;
+    public Integer getCommand() {
+        return command;
     }
 
-    public void setCarId(String carId) {
-        this.carId = carId;
+    public void setCommand(Integer command) {
+        this.command = command;
     }
 }

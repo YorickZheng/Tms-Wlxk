@@ -13,10 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -95,9 +92,22 @@ public class RoleController {
      * @return
      */
     @RequestMapping(value = "/pageView", method = RequestMethod.POST)
-    public Map pageData(@RequestBody QueryRoleVo vo) {
+    public Map pageView(@RequestBody QueryRoleVo vo) {
         try {
             return roleService.getPageView(vo);
+        } catch (TmsDataValidationException e) {
+            logger.error(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/{code}", method = RequestMethod.GET)
+    public Map byCode(@PathVariable String code) {
+        try {
+            return roleService.queryByCode(code);
         } catch (TmsDataValidationException e) {
             logger.error(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

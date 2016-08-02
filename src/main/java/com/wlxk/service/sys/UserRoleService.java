@@ -12,5 +12,6 @@ import java.util.List;
 public interface UserRoleService {
     UserRole save(UserRole userRole);
     Iterable<UserRole> save(List<UserRole> list);
+    void deleteByUserId(String userId);
     List<UserRole> getListByUserId(String userId);
 }

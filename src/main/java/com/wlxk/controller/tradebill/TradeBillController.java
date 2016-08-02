@@ -8,10 +8,8 @@ import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -55,10 +53,10 @@ public class TradeBillController {
      * @param vo 审核数据
      * @return 操作结果
      */
-    @RequestMapping(value = "/reviewTradeBill", method = RequestMethod.POST)
+    @RequestMapping(value = "/review", method = RequestMethod.POST)
     public Map reviewTradeBill(@RequestBody ReviewTradeBillVo vo) {
         try {
-            return tradeBillService.reviewTradeBill(vo, null);
+            return tradeBillService.reviewTradeBill(vo);
         } catch (TmsDataValidationException e) {
             logger.info(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
@@ -74,7 +72,7 @@ public class TradeBillController {
      * @param vo 修改数据
      * @return 操作结果
      */
-    @RequestMapping(value = "/updateTradeBill", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Map updateTradeBill(@RequestBody UpdateTradeBillVo vo) {
         try {
             return tradeBillService.updateTradeBill(vo);
@@ -112,10 +110,23 @@ public class TradeBillController {
      * @param vo 查询条件
      * @return 分页数据
      */
-    @RequestMapping(value = "/getTradeBillPage", method = RequestMethod.POST)
-    public Map getTradeBillPage(@RequestBody QueryTradeBillVo vo) {
+    @RequestMapping(value = "/pageView", method = RequestMethod.POST)
+    public Map pageView(@RequestBody QueryTradeBillVo vo) {
         try {
-            return tradeBillService.getTradeBillViewPage(tradeBillService.getTradeBillPage(vo.getTradeBill(), vo.getPage(), vo.getSize()));
+            return tradeBillService.getTradeBillViewPage(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/{tradeBillNo}", method = RequestMethod.GET)
+    public Map byTradeBillNo(@PathVariable String tradeBillNo) {
+        try {
+            return tradeBillService.byTradeBillNo(tradeBillNo);
         } catch (TmsDataValidationException e) {
             logger.info(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

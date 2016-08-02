@@ -1,6 +1,7 @@
 package com.wlxk.domain.tradebill;
 
 import com.wlxk.domain.BasicReview;
+import com.wlxk.support.util.CommonProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,22 +16,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tms_trade_bill_review")
 public class TradeBillReview extends BasicReview {
-    /** 交易单ID */
-    private String tradeBillId;
 
-    public static TradeBillReview newDefaultInstance(String tradeBillId) {
+    public static TradeBillReview newDefaultInstance(String businessId) {
         TradeBillReview review = new TradeBillReview();
-        review.setTradeBillId(tradeBillId);
-        review.setStatus(0);
+        review.setBusinessId(businessId);
+        review.setStatus(CommonProperty.ReviewStatus.UNAUDITED);
         return review;
-    }
-
-    public String getTradeBillId() {
-        return tradeBillId;
-    }
-
-    public void setTradeBillId(String tradeBillId) {
-        this.tradeBillId = tradeBillId;
     }
 
 }

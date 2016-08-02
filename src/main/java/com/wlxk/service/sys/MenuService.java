@@ -21,9 +21,11 @@ public interface MenuService {
 
     Menu getOneById(String id);
 
-    List<Menu> getListById(List<String> ids);
+    List<Menu> getListById(List<String> idList);
 
     List<Menu> getListByParentMenuId(String parentMenuId);
+
+    Iterable<Menu> getAll();
 
     Map add(AddMenuVo vo);
 
@@ -33,5 +35,6 @@ public interface MenuService {
 
     Map queryMenu(QueryMenuVo vo);
 
+    Map queryByCode(String code);
 
 }

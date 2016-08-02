@@ -1,0 +1,20 @@
+@startuml
+title 用户权限校验
+
+start;
+:HttpRequest;
+:MyFilter.doPost()\n进行权限认证;
+:获取用户ID(Redis中的key);
+if(key 是否拥有value) then (yes)
+    :获取请求的uri;
+    if(uri是否是当前用户拥有的菜单) then (yes)
+        :继续后续流程;
+        stop;
+    else (no)
+        :上抛异常通知前台;
+    endif
+else (no)
+    :上抛异常通知前端;
+endif
+
+@enduml

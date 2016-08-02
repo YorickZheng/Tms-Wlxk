@@ -11,10 +11,8 @@ import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -91,10 +89,47 @@ public class MenuController {
      * @param vo
      * @return
      */
-    @RequestMapping(value = "/query", method = RequestMethod.POST)
-    public Map query(@RequestBody QueryMenuVo vo) {
+    @RequestMapping(value = "/pageView", method = RequestMethod.POST)
+    public Map pageView(@RequestBody QueryMenuVo vo) {
         try {
             return menuService.queryMenu(vo);
+        } catch (TmsDataValidationException e) {
+            logger.error(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    /**
+     * 通过code查询
+     *
+     * @param code
+     * @return
+     */
+    @RequestMapping(value = "/{code}", method = RequestMethod.GET)
+    public Map byCode(@PathVariable String code) {
+        try {
+            return menuService.queryByCode(code);
+        } catch (TmsDataValidationException e) {
+            logger.error(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    /**
+     * 获取所有菜单
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    public Map getAll() {
+        try {
+            return ResultsUtil.getSuccessResultMap(menuService.getAll());
         } catch (TmsDataValidationException e) {
             logger.error(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

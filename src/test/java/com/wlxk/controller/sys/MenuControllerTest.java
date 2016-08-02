@@ -113,10 +113,9 @@ public class MenuControllerTest {
     public void testQueryOneMenu() throws Exception {
         QueryMenuVo vo = new QueryMenuVo();
         vo.setMenuId("4028839456316f7f0156316f9b120000");
-        vo.setParentMenuId("4028839456316f7f0156316f9b120000");
         vo.setCommand(CommonProperty.MenuQueryCommand.QUERY_BY_ID);
         vo.setCommand(CommonProperty.MenuQueryCommand.QUERY_BY_PARENT_ID);
 
-        doPost(vo, "/menu/query");
+        doPost(vo, "/menu/getPageView");
     }
 }

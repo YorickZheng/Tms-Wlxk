@@ -16,33 +16,61 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "tms_branch")
 public class Branch extends BasicDomain {
-    /** 父网点ID */
-    private String parentBranchId;
-    /** 等级 */
-    private String level;
-    /** 网点NO */
+    /**
+     * 父网点ID
+     */
+    private String parentBranchId = "0";
+    /**
+     * 等级
+     */
+    private Integer level = 0;
+    /**
+     * 网点NO
+     */
     private String branchNo;
-    /** 网点名称 */
-    private String BranchName;
-    /** 类型 */
+    /**
+     * 网点名称
+     */
+    private String branchName;
+    /**
+     * 类型
+     */
     private Integer type;
-    /** 业务类型 */
+    /**
+     * 业务类型
+     */
     private Integer businessType;
-    /** 所在城市 */
+    /**
+     * 所在城市
+     */
     private String city;
-    /** 发货城市 */
+    /**
+     * 发货城市
+     */
     private String startCity;
-    /** 详细地址 */
+    /**
+     * 详细地址
+     */
     private String address;
-    /** 电话 */
+    /**
+     * 电话
+     */
     private String telephone;
-    /** 传真 */
+    /**
+     * 传真
+     */
     private String fax;
-    /** 年营业额/万 */
+    /**
+     * 年营业额/万
+     */
     private BigDecimal yearTurnover;
-    /** 营业执照照片路径 */
+    /**
+     * 营业执照照片路径
+     */
     private String businessLicenseImageUrl;
-    /** 网点图片路径 */
+    /**
+     * 网点图片路径
+     */
     private String branchImageUrl;
 
     public String getParentBranchId() {
@@ -53,11 +81,11 @@ public class Branch extends BasicDomain {
         this.parentBranchId = parentBranchId;
     }
 
-    public String getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
@@ -70,11 +98,11 @@ public class Branch extends BasicDomain {
     }
 
     public String getBranchName() {
-        return BranchName;
+        return branchName;
     }
 
     public void setBranchName(String branchName) {
-        BranchName = branchName;
+        this.branchName = branchName;
     }
 
     public Integer getType() {

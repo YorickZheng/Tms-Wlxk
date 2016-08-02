@@ -13,6 +13,6 @@ import java.util.List;
  * @date 2016/7/26
  */
 public interface BranchReviewRepository extends PagingAndSortingRepository<BranchReview, String> {
-    BranchReview findOneByBranchId(String branchId);
-    List<BranchReview> findByBranchId(String branchId);
+    BranchReview findOneByBusinessId(String businessId);
+    List<BranchReview> findByBusinessId(String businessId);
 }

@@ -29,11 +29,11 @@ public class ContractReviewServiceImpl implements ContractReviewService {
 
     @Override
     public ContractReview getOneByContractId(String contractId) {
-        return repository.findOneByContractId(contractId);
+        return repository.findOneByBusinessId(contractId);
     }
 
     @Override
     public List<ContractReview> getListByContractId(String contractId) {
-        return repository.findByContractId(contractId);
+        return repository.findByBusinessId(contractId);
     }
 }

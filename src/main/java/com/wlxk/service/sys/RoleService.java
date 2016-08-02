@@ -22,8 +22,7 @@ public interface RoleService {
     Map add(AddRoleVo vo);
     Map disuse(DisuseRoleVo vo);
     Map update(UpdateRoleVo vo);
-
     Page<Role> getPage(QueryRoleVo vo);
-
     Map getPageView(QueryRoleVo vo);
+    Map queryByCode(String code);
 }

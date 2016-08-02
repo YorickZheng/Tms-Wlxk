@@ -1,5 +1,6 @@
 package com.wlxk.service.tradebill;
 
+import com.wlxk.controller.sys.vo.user.QueryUserVo;
 import com.wlxk.controller.tradebill.vo.*;
 import com.wlxk.domain.tradebill.TradeBill;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,8 @@ public interface TradeBillService {
      */
     TradeBill getOneById(String tradeBillId);
 
+    TradeBill getOneByTradeBillNo(String tradeBillNO);
+
     /**
      * 开单
      *
@@ -41,7 +44,7 @@ public interface TradeBillService {
      * @param command  
      * @return
      */
-    Map reviewTradeBill(ReviewTradeBillVo vo, Integer command);
+    Map reviewTradeBill(ReviewTradeBillVo vo);
 
     /**
      * 交易单修改
@@ -62,18 +65,24 @@ public interface TradeBillService {
     /**
      * 单表多条件分页查询
      *
-     * @param tradeBill
-     * @param page
-     * @param size
+     * @param vo
      * @return
      */
-    Page<TradeBill> getTradeBillPage(TradeBill tradeBill, Integer page, Integer size);
+    Page<TradeBill> getTradeBillPage(QueryTradeBillVo vo);
 
     /**
      * 多表多条件分页查询
      *
-     * @param tradeBillPage
+     * @param vo
      * @return
      */
-    Map getTradeBillViewPage(Page<TradeBill> tradeBillPage);
+    Map getTradeBillViewPage(QueryTradeBillVo vo);
+
+    /**
+     * 通过交易单No查询详情
+     *
+     * @param tradeBillNo
+     * @return
+     */
+    Map byTradeBillNo(String tradeBillNo);
 }

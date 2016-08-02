@@ -1,6 +1,7 @@
 package com.wlxk.domain.contract;
 
 import com.wlxk.domain.BasicDomain;
+import com.wlxk.support.util.CommonProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -23,6 +24,15 @@ public class Contract extends BasicDomain {
     private Integer status;
     /** 合同说明 */
     private String description;
+
+    public static Contract newInstance(String contractNo, String description) {
+        Contract contract = new Contract();
+        contract.setContractNo(contractNo);
+        contract.setSettleType(CommonProperty.SettleType.现金);
+        contract.setStatus(CommonProperty.ContractStatus.待装车);
+        contract.setDescription(description);
+        return contract;
+    }
 
     public String getContractNo() {
         return contractNo;

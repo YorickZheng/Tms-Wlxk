@@ -12,4 +12,5 @@ public interface DriverService {
     Driver save(Driver driver);
     Iterable<Driver> save(List<Driver> list);
     List<Driver> getListByCarId(String carId);
+    void deleteByCarId(String carId);
 }

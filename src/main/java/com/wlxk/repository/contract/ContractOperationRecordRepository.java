@@ -3,6 +3,8 @@ package com.wlxk.repository.contract;
 import com.wlxk.domain.contract.ContractOperationRecord;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
+
 /**
  * 装车合同操作记录仓储层
  *
@@ -11,4 +13,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * @date 2016/7/26
  */
 public interface ContractOperationRecordRepository extends PagingAndSortingRepository<ContractOperationRecord, String> {
+    List<ContractOperationRecord> findByBusinessId(String businessId);
 }
