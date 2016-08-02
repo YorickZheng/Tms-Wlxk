@@ -1,11 +1,11 @@
 package com.wlxk.controller.contract.vo;
 
-import com.wlxk.support.vo.BasicOperationVo;
+import com.wlxk.support.vo.OperationDataVo;
 
 /**
  * Created by malin on 2016/7/26.
  */
-public class ReviewContractVo extends BasicOperationVo {
+public class ReviewContractVo extends OperationDataVo {
     private Integer command;
 
     public Integer getCommand() {

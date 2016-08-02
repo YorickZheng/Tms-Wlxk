@@ -145,4 +145,11 @@ public class CommonProperty {
          */
         public static final String TRADEBILL_PREFIX = "tms.tradebill.";
     }
+
+    public static class PostNotNullAttributes {
+        public static final String operationById = "operationById";
+        public static final String operationByName = "operationByName";
+        public static final String description = "description";
+        public static final String businessId = "businessId";
+    }
 }

@@ -23,6 +23,8 @@ public class User extends BasicDomain {
     private String password;
     /** 名称 */
     private String name;
+    /** 组织ID */
+    private String branchId;
 
     public User() {
     }
@@ -55,5 +57,13 @@ public class User extends BasicDomain {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
     }
 }

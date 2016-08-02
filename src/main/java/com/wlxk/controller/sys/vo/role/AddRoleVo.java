@@ -2,14 +2,14 @@ package com.wlxk.controller.sys.vo.role;
 
 import com.wlxk.domain.sys.Role;
 import com.wlxk.domain.sys.RoleMenu;
-import com.wlxk.support.vo.BasicOperationVo;
+import com.wlxk.support.vo.OperationVo;
 
 import java.util.List;
 
 /**
  * Created by malin on 2016/7/28.
  */
-public class AddRoleVo extends BasicOperationVo {
+public class AddRoleVo extends OperationVo {
     private Role role;
     private List<RoleMenu> roleMenuList;
 

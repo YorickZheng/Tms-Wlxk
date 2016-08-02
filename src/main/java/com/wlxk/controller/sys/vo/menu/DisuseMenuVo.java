@@ -1,11 +1,11 @@
 package com.wlxk.controller.sys.vo.menu;
 
-import com.wlxk.support.vo.BasicOperationVo;
+import com.wlxk.support.vo.OperationDataVo;
 
 /**
  * Created by malin on 2016/7/28.
  */
-public class DisuseMenuVo extends BasicOperationVo {
+public class DisuseMenuVo extends OperationDataVo {
     private int command;
 
     public int getCommand() {

@@ -8,19 +8,10 @@ package com.wlxk.support.vo;
  * @version 1.0
  * @date 2016/7/27
  */
-public abstract class BasicOperationVo {
-    private String businessId;
+public abstract class OperationVo {
     private String operationById;
     private String operationByName;
     private String description;
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
 
     public String getOperationById() {
         return operationById;

@@ -1,11 +1,11 @@
 package com.wlxk.controller.tradebill.vo;
 
-import com.wlxk.support.vo.BasicOperationVo;
+import com.wlxk.support.vo.OperationDataVo;
 
 /**
  * Created by malin on 2016/7/24.
  */
-public class DisuseTradeBillVo extends BasicOperationVo {
+public class DisuseTradeBillVo extends OperationDataVo {
     private Integer command;
 
     public Integer getCommand() {

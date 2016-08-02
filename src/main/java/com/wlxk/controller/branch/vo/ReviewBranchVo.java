@@ -1,11 +1,11 @@
 package com.wlxk.controller.branch.vo;
 
-import com.wlxk.support.vo.BasicOperationVo;
+import com.wlxk.support.vo.OperationDataVo;
 
 /**
  * Created by malin on 2016/7/26.
  */
-public class ReviewBranchVo extends BasicOperationVo {
+public class ReviewBranchVo extends OperationDataVo {
     private Integer command;
 
     public Integer getCommand() {

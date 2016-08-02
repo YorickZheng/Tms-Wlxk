@@ -1,12 +1,12 @@
 package com.wlxk.controller.sys.vo.menu;
 
 import com.wlxk.domain.sys.Menu;
-import com.wlxk.support.vo.BasicOperationVo;
+import com.wlxk.support.vo.OperationVo;
 
 /**
  * Created by malin on 2016/7/28.
  */
-public class AddMenuVo extends BasicOperationVo {
+public class AddMenuVo extends OperationVo {
     private Menu menu;
 
     public Menu getMenu() {

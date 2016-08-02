@@ -1,11 +1,11 @@
 package com.wlxk.controller.car.vo;
 
-import com.wlxk.support.vo.BasicOperationVo;
+import com.wlxk.support.vo.OperationDataVo;
 
 /**
  * Created by malin on 2016/7/26.
  */
-public class ReviewCarVo extends BasicOperationVo {
+public class ReviewCarVo extends OperationDataVo {
     private Integer command;
 
     public Integer getCommand() {

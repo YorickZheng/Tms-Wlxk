@@ -2,14 +2,14 @@ package com.wlxk.controller.car.vo;
 
 import com.wlxk.domain.car.Car;
 import com.wlxk.domain.car.Driver;
-import com.wlxk.support.vo.BasicOperationVo;
+import com.wlxk.support.vo.OperationVo;
 
 import java.util.List;
 
 /**
  * Created by malin on 2016/7/26.
  */
-public class AddCarVo extends BasicOperationVo {
+public class AddCarVo extends OperationVo {
     private Car car;
     private List<Driver> driverList;
 
