@@ -106,7 +106,7 @@ public class UserControllerTest {
         vo.setOperationById("123456");
         vo.setOperationByName("管理员");
         vo.setDescription("更新用户!");
-        vo.setBusinessId("40288394562ce84401562ce85eda0000");
+        // vo.setBusinessId("40288394562ce84401562ce85eda0000");
 
         MvcResult result = mockMvc.perform(
                 post("/user/update", "json")

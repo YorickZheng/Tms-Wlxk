@@ -37,7 +37,7 @@ public class PostRequestFilter implements Filter {
             if (method.equals("POST")) {
                 json = TmsServletRequest.getRequestPostStr(tmsServletRequest);
                 if (!json.contains(CommonProperty.PostNotNullAttributes.operationById)) {
-                    
+
                 }
 
                 uri = tmsServletRequest.getRequestURI();
