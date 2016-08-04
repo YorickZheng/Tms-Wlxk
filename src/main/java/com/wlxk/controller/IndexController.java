@@ -40,7 +40,7 @@ public class IndexController {
             logger.info("2. 获取缓存");
             String key = CommonProperty.RedisKeyPrefix.USER_PREFIX + loginUser.getUsername();
             if (redisCache.exists(key)) {
-                return ResultsUtil.getSuccessResultMap("登录成功!");
+                return ResultsUtil.getSuccessResultMap(redisCache.get(key));
             } else {
                 logger.info("3. 获取用户信息");
                 Map resultMap = userService.getByUsernameAndPassword(loginUser.getUsername(), loginUser.getPassword());
@@ -49,9 +49,11 @@ public class IndexController {
                     return ResultsUtil.getFailureResultMap("账号密码错误!");
                 } else {
                     if (!redisCache.exists(key)) {
+                        user.setPassword("");
+                        ((UserView)resultMap.get("data")).setUser(user);
                         redisCache.set(key, (UserView) resultMap.get("data"), 3600L);
                     }
-                    return ResultsUtil.getSuccessResultMap("登录成功!");
+                    return ResultsUtil.getSuccessResultMap(redisCache.get(key));
                 }
             }
         } catch (TmsDataValidationException e) {

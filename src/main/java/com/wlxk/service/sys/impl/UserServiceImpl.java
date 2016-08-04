@@ -333,7 +333,7 @@ public class UserServiceImpl implements UserService {
             List<String> menuIdList = roleMenuService.getListByRoleIdList(roleIdList).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
             List<Menu> menuList = menuService.getListById(menuIdList);
             List<UserOperationRecord> operationRecordList = operationRecordService.getListByUserId(user.getId());
-
+            
             return ResultsUtil.getSuccessResultMap(UserView.newInstance(user, roleList, menuList, operationRecordList));
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
