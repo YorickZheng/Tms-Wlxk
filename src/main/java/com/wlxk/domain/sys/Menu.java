@@ -2,6 +2,7 @@ package com.wlxk.domain.sys;
 
 import com.wlxk.domain.BasicDomain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -29,6 +30,9 @@ public class Menu extends BasicDomain {
     private Integer level = 0;
     /** 父菜单Id */
     private String parentMenuId = "0";
+    /** 排序字段 */
+    @Column(name = "orderBy")
+    private Integer order = 1;
 
     public String getName() {
         return name;
@@ -84,5 +88,13 @@ public class Menu extends BasicDomain {
 
     public void setParentMenuId(String parentMenuId) {
         this.parentMenuId = parentMenuId;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 }
