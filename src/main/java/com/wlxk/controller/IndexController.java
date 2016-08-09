@@ -37,7 +37,7 @@ public class IndexController {
     @RequestMapping(value = "/login")
     public Map<String, Object> login(@RequestBody LoginUser loginUser) {
         try {
-            logger.info("1. 数据校验");
+            logger.info("1. 数据校验{}", loginUser.toString());
             loginByDataValidation(loginUser);
 
             logger.info("2. 获取缓存");
@@ -103,6 +103,14 @@ public class IndexController {
 class LoginUser {
     String username;
     String password;
+
+    @Override
+    public String toString() {
+        return "LoginUser{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 
     public String getUsername() {
         return username;
