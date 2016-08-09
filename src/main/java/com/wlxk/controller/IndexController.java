@@ -1,6 +1,7 @@
 package com.wlxk.controller;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.wlxk.controller.sys.UserController;
 import com.wlxk.controller.sys.vo.user.UserView;
 import com.wlxk.domain.sys.User;
@@ -31,6 +32,8 @@ public class IndexController {
     @Autowired
     private TmsRedisCache redisCache;
 
+
+
     @RequestMapping(value = "/login")
     public Map<String, Object> login(@RequestBody LoginUser loginUser) {
         try {
@@ -40,6 +43,10 @@ public class IndexController {
             logger.info("2. 获取缓存");
             String key = CommonProperty.RedisKeyPrefix.USER_PREFIX + loginUser.getUsername();
             if (redisCache.exists(key)) {
+                User user = ((UserView) ResultsUtil.getSuccessResultMap(redisCache.get(key)).get("data")).getUser();
+                if (!user.getPassword().equals(loginUser.getPassword())) {
+                    return ResultsUtil.getFailureResultMap("账号密码错误!");
+                }
                 return ResultsUtil.getSuccessResultMap(redisCache.get(key));
             } else {
                 logger.info("3. 获取用户信息");
@@ -49,7 +56,6 @@ public class IndexController {
                     return ResultsUtil.getFailureResultMap("账号密码错误!");
                 } else {
                     if (!redisCache.exists(key)) {
-                        user.setPassword("");
                         ((UserView)resultMap.get("data")).setUser(user);
                         redisCache.set(key, (UserView) resultMap.get("data"), 3600L);
                     }
@@ -76,6 +82,21 @@ public class IndexController {
         if (Strings.isNullOrEmpty(loginUser.getPassword())) {
             throw new TmsDataValidationException("密码不能为空!");
         }
+    }
+
+
+    @RequestMapping(value = "/corsByGet", method = RequestMethod.GET)
+    public Map<String, Object> corsByGet() {
+        Map<String, Object> map = Maps.newConcurrentMap();
+        map.put("k1", "Cors By Get");
+        return map;
+    }
+
+    @RequestMapping(value = "/corsByPost", method = RequestMethod.GET)
+    public Map<String, Object> corsByPost() {
+        Map<String, Object> map = Maps.newConcurrentMap();
+        map.put("k1", "Cors By Post");
+        return map;
     }
 }
 
