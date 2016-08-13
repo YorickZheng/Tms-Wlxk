@@ -1,7 +1,5 @@
 package com.wlxk.support.util;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 /**
  * Created by malin on 2016/7/24.
  */
@@ -74,7 +72,6 @@ public class CommonProperty {
          * 取消作废
          */
         public static final int DISUSE_CANCEL = 2;
-
         /**
          * 命令集合
          */
@@ -93,24 +90,31 @@ public class CommonProperty {
          * 通过父ID
          */
         public static final int QUERY_BY_PARENT_ID = 2;
-
         /**
          * 命令集合
          */
         public static final int[] COMMANDS = {QUERY_BY_ID, QUERY_BY_PARENT_ID};
     }
 
+    /**
+     * 合同状态
+     */
     public static class ContractStatus {
         public static final Integer 待装车 = 1;
         public static final Integer 装成完成 = 2;
         public static final Integer 运输中 = 3;
-        public static final Integer 已完成 = 4;
+        public static final Integer 派送中 = 4;
+        public static final Integer 已完成 = 5;
     }
 
+    /**
+     * 结算类型
+     */
     public static class SettleType {
         public static final Integer 现金 = 1;
         public static final Integer 银行 = 2;
         public static final Integer 油卡 = 3;
+        public static final Integer 回单 = 4;
     }
 
     /**
@@ -146,6 +150,9 @@ public class CommonProperty {
         public static final String TRADEBILL_PREFIX = "tms.tradebill.";
     }
 
+    /**
+     * post 请求非空属性
+     */
     public static class PostNotNullAttributes {
         public static final String operationById = "operationById";
         public static final String operationByName = "operationByName";
