@@ -16,6 +16,14 @@ public class OpenTradeBillVo extends OperationVo {
     private List<Goods> goodsList;
     private List<Losses> lossesList;
 
+    public static OpenTradeBillVo newInstance(TradeBill tradeBill, List<Goods> goodsList, List<Losses> lossesList) {
+        OpenTradeBillVo vo = new OpenTradeBillVo();
+        vo.setTradeBill(tradeBill);
+        vo.setGoodsList(goodsList);
+        vo.setLossesList(lossesList);
+        return vo;
+    }
+
     public TradeBill getTradeBill() {
         return tradeBill;
     }

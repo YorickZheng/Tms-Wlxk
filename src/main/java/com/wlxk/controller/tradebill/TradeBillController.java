@@ -123,6 +123,11 @@ public class TradeBillController {
         }
     }
 
+    /**
+     * 通过交易单号查询
+     * @param tradeBillNo
+     * @return
+     */
     @RequestMapping(value = "/{tradeBillNo}", method = RequestMethod.GET)
     public Map byTradeBillNo(@PathVariable String tradeBillNo) {
         try {

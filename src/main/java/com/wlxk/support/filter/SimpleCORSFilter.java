@@ -23,10 +23,9 @@ public class SimpleCORSFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-
         logger.info("跨域请求的IP:{} \t {}", servletRequest.getRemoteAddr(), servletRequest.getRemoteHost());
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
