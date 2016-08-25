@@ -16,6 +16,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tms_contract")
 public class Contract extends BasicDomain {
+    /** 司机ID */
+    private String driverId;
     /** 合同NO */
     private String contractNo;
     /** 结算方式 */
@@ -32,6 +34,14 @@ public class Contract extends BasicDomain {
         contract.setStatus(CommonProperty.ContractStatus.待装车);
         contract.setDescription(description);
         return contract;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
     }
 
     public String getContractNo() {

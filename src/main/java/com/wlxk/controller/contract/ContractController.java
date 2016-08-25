@@ -8,6 +8,7 @@ import com.wlxk.support.util.CommonProperty;
 import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,25 @@ public class ContractController {
     public Map add(@RequestBody AddContractVo vo) {
         try {
             return contractService.add(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    /**
+     * 装车
+     *
+     * @param vo
+     * @return
+     */
+    @RequestMapping(value = "/loading", method = RequestMethod.POST)
+    public Map loading(@RequestBody LoadingVo vo) {
+        try {
+            return contractService.loading(vo);
         } catch (TmsDataValidationException e) {
             logger.info(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

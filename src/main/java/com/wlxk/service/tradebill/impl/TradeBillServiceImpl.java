@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by malin on 2016/7/22.
@@ -29,6 +30,9 @@ public class TradeBillServiceImpl implements TradeBillService {
 
     private final static Logger logger = LoggerFactory.getLogger(TradeBillServiceImpl.class);
 
+    // 交易单 repository
+    @Autowired(required = false)
+    private TradeBillRepository repository;
     // 货物 service
     @Autowired
     private GoodsService goodsService;
@@ -41,23 +45,30 @@ public class TradeBillServiceImpl implements TradeBillService {
     // 审核记录 service
     @Autowired
     private TradeBillReviewService tradeBillReviewService;
-    // 交易单 repository
-    @Autowired(required = false)
-    private TradeBillRepository tradeBillRepository;
 
     @Override
     public TradeBill save(TradeBill tradeBill) {
-        return tradeBillRepository.save(tradeBill);
+        return repository.save(tradeBill);
+    }
+
+    @Override
+    public void save(List<TradeBill> list) {
+        repository.save(list);
     }
 
     @Override
     public TradeBill getOneById(String tradeBillId) {
-        return tradeBillRepository.findOne(tradeBillId);
+        return repository.findOne(tradeBillId);
     }
 
     @Override
     public TradeBill getOneByTradeBillNo(String tradeBillNO) {
-        return tradeBillRepository.findOneByTradeBillNo(tradeBillNO);
+        return repository.findByTradeBillNo(tradeBillNO);
+    }
+
+    @Override
+    public List<TradeBill> getListByIdList(List<String> idList) {
+        return repository.findByIdIn(idList);
     }
 
     @Transactional
@@ -354,7 +365,7 @@ public class TradeBillServiceImpl implements TradeBillService {
     @Override
     public Page<TradeBill> getTradeBillPage(QueryTradeBillVo vo) {
         PageRequest request = new PageRequest(vo.getPage(), vo.getSize(), new Sort(vo.getDirection(), vo.getSortList()));
-        return tradeBillRepository.findAll(TradeBillSpecs.tradeBillPageSpecs(vo.getParams()), request);
+        return repository.findAll(TradeBillSpecs.tradeBillPageSpecs(vo.getParams()), request);
     }
 
     @Override

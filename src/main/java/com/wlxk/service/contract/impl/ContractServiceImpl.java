@@ -3,24 +3,23 @@ package com.wlxk.service.contract.impl;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
-import com.wlxk.controller.branch.vo.BranchView;
-import com.wlxk.controller.branch.vo.QueryBranchVo;
 import com.wlxk.controller.contract.vo.*;
-import com.wlxk.domain.branch.*;
 import com.wlxk.domain.contract.Contract;
 import com.wlxk.domain.contract.ContractLine;
 import com.wlxk.domain.contract.ContractOperationRecord;
 import com.wlxk.domain.contract.ContractReview;
+import com.wlxk.domain.tradebill.TradeBill;
+import com.wlxk.domain.tradebill.TradeBillOperationRecord;
 import com.wlxk.repository.contract.ContractRepository;
 import com.wlxk.repository.contract.specs.ContractSpecs;
 import com.wlxk.service.contract.ContractLineService;
 import com.wlxk.service.contract.ContractOperationRecordService;
 import com.wlxk.service.contract.ContractReviewService;
 import com.wlxk.service.contract.ContractService;
+import com.wlxk.service.tradebill.TradeBillOperationRecordService;
+import com.wlxk.service.tradebill.TradeBillService;
 import com.wlxk.support.exception.TmsDataValidationException;
-import com.wlxk.support.exception.TmsException;
 import com.wlxk.support.util.CommonProperty;
-import com.wlxk.support.util.CurrentUserUtils;
 import com.wlxk.support.util.PageUtil;
 import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
@@ -31,10 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by malin on 2016/7/26.
@@ -51,7 +47,11 @@ public class ContractServiceImpl implements ContractService {
     @Autowired(required = false)
     private ContractReviewService reviewService;
     @Autowired(required = false)
-    private ContractOperationRecordService operationRecordService;
+    private ContractOperationRecordService contractOperationRecordService;
+    @Autowired(required = false)
+    private TradeBillService tradeBillService;
+    @Autowired(required = false)
+    private TradeBillOperationRecordService tradeBillOperationRecordService;
 
     @Override
     public Contract getOneById(String id) {
@@ -82,7 +82,7 @@ public class ContractServiceImpl implements ContractService {
             reviewService.save(ContractReview.newDefaultInstance(contract.getId()));
 
             logger.info("5. 新增操作记录");
-            operationRecordService.save(ContractOperationRecord.newInstance(contract.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            contractOperationRecordService.save(ContractOperationRecord.newInstance(contract.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
 
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
@@ -116,6 +116,65 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    public Map loading(LoadingVo vo) {
+        try {
+            logger.info("1. 数据校验");
+            checkLoading(vo);
+
+            logger.info("2. 更新装车合同");
+            Contract contract = getOneById(vo.getContractId());
+            contract.setModifyById(vo.getOperationById());
+            contract.setModifyByName(vo.getOperationByName());
+            contract.setModifyByDate(Calendar.getInstance().getTime());
+            save(contract);
+
+            logger.info("3. 更新交易单");
+            List<TradeBill> tradeBillList = tradeBillService.getListByIdList(vo.getTradeBillIdList());
+            tradeBillList.forEach(tradeBill -> {
+                tradeBill.setContractId(contract.getId());
+                tradeBill.setContractNo(contract.getContractNo());
+                tradeBill.setModifyById(vo.getOperationById());
+                tradeBill.setModifyByName(vo.getOperationByName());
+                tradeBill.setModifyByDate(Calendar.getInstance().getTime());
+                tradeBillOperationRecordService.save(TradeBillOperationRecord.newInstance(tradeBill.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            });
+            tradeBillService.save(tradeBillList);
+
+
+            logger.info("4. 新增操作记录");
+            contractOperationRecordService.save(ContractOperationRecord.newInstance(contract.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("装车失败!", e);
+            throw e;
+        }
+        return ResultsUtil.getSuccessResultMap("装车成功");
+    }
+
+    private void checkLoading(LoadingVo vo) {
+        if (Objects.isNull(vo)) {
+            throw new TmsDataValidationException("请求主体对象不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getContractId())) {
+            throw new TmsDataValidationException("合同ID不能为空!");
+        }
+        if (Objects.isNull(vo.getTradeBillIdList())) {
+            throw new TmsDataValidationException("交易单ID集合不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationById())) {
+            throw new TmsDataValidationException("操作人ID不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationByName())) {
+            throw new TmsDataValidationException("操作人名称不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getDescription())) {
+            throw new TmsDataValidationException("操作说明不能为空!");
+        }
+    }
+
+    @Override
     public Map review(ReviewContractVo vo) {
         try {
             logger.info("1. 数据校验");
@@ -134,7 +193,7 @@ public class ContractServiceImpl implements ContractService {
             reviewService.save(review);
 
             logger.info("3. 新增操作记录");
-            operationRecordService.save(ContractOperationRecord.newInstance(vo.getBusinessId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            contractOperationRecordService.save(ContractOperationRecord.newInstance(vo.getBusinessId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
 
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
@@ -213,7 +272,7 @@ public class ContractServiceImpl implements ContractService {
             reviewService.save(reviewList);*/
 
             logger.info("4. 新增操作记录");
-            operationRecordService.save(ContractOperationRecord.newInstance(vo.getBusinessId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            contractOperationRecordService.save(ContractOperationRecord.newInstance(vo.getBusinessId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
             throw e;
@@ -275,7 +334,7 @@ public class ContractServiceImpl implements ContractService {
             }
 
             logger.info("4. 新增操作记录");
-            operationRecordService.save(ContractOperationRecord.newInstance(contract.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            contractOperationRecordService.save(ContractOperationRecord.newInstance(contract.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
         } catch (TmsDataValidationException e) {
             logger.error("数据校验异常!", e);
             throw e;
@@ -326,7 +385,7 @@ public class ContractServiceImpl implements ContractService {
                 String contractId = contract.getId();
                 List<ContractLine> lineList = lineService.getListByContractId(contractId);
                 List<ContractReview> reviews = reviewService.getListByContractId(contractId);
-                List<ContractOperationRecord> operationRecordList = operationRecordService.getListByBusinessId(contractId);
+                List<ContractOperationRecord> operationRecordList = contractOperationRecordService.getListByBusinessId(contractId);
 
                 content.add(ContractView.newInstance(contract, lineList, reviews, operationRecordList));
             });
