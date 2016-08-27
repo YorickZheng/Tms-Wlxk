@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.wlxk.TmsApplication;
 import com.wlxk.controller.contract.vo.*;
 import com.wlxk.controller.tradebill.vo.OpenTradeBillVo;
+import com.wlxk.controller.tradebill.vo.QueryLossesVo;
 import com.wlxk.domain.contract.Contract;
 import com.wlxk.domain.contract.ContractLine;
 import com.wlxk.domain.tradebill.Goods;
@@ -228,6 +229,9 @@ public class BusinessTest {
     // 分页显示费用
     @Test
     public void pageFee() throws Exception {
+        QueryLossesVo vo = new QueryLossesVo();
+        vo.setParams(Maps.newConcurrentMap());
 
+        doPost(vo, "/losses/pageView");
     }
 }
