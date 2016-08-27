@@ -1,8 +1,9 @@
 package com.wlxk.controller.contract.vo;
 
 
-import com.sun.tools.javac.util.List;
 import com.wlxk.support.vo.OperationVo;
+
+import java.util.List;
 
 /**
  * Created by 马林 on 2016/8/25.

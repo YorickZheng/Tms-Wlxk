@@ -101,10 +101,21 @@ public class CommonProperty {
      */
     public static class ContractStatus {
         public static final Integer 待装车 = 1;
-        public static final Integer 装成完成 = 2;
+        public static final Integer 已装车 = 2;
         public static final Integer 运输中 = 3;
         public static final Integer 派送中 = 4;
-        public static final Integer 已完成 = 5;
+        public static final Integer 已签收 = 5;
+    }
+
+    /**
+     * 交易单状态
+     */
+    public static class TradeBillStatus {
+        public static final Integer 待装车 = 1;
+        public static final Integer 已装车 = 2;
+        public static final Integer 运输中 = 3;
+        public static final Integer 派送中 = 4;
+        public static final Integer 已签收 = 5;
     }
 
     /**

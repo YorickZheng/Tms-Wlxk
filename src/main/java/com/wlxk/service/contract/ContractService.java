@@ -45,6 +45,22 @@ public interface ContractService {
     Map loading(LoadingVo vo);
 
     /**
+     * 发车
+     *
+     * @param vo
+     * @return
+     */
+    Map departure(DepartureVo vo);
+
+    /**
+     * 签收
+     *
+     * @param vo
+     * @return
+     */
+    Map receipt(ReceiptVo vo);
+
+    /**
      * 审核
      *
      * @param vo
@@ -83,4 +99,12 @@ public interface ContractService {
      * @return
      */
     Map pageView(QueryContractVo vo);
+
+    /**
+     * 通过id查询合同
+     *
+     * @param id
+     * @return
+     */
+    Map byId(String id);
 }

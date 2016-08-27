@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -57,6 +54,33 @@ public class ContractController {
     public Map loading(@RequestBody LoadingVo vo) {
         try {
             return contractService.loading(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+
+    @RequestMapping(value = "/departure", method = RequestMethod.POST)
+    public Map departure(@RequestBody DepartureVo vo) {
+        try {
+            return contractService.departure(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/receipt", method = RequestMethod.POST)
+    public Map receipt(@RequestBody ReceiptVo vo) {
+        try {
+            return contractService.receipt(vo);
         } catch (TmsDataValidationException e) {
             logger.info(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
@@ -133,6 +157,19 @@ public class ContractController {
     public Map pageView(@RequestBody QueryContractVo vo) {
         try {
             return contractService.pageView(vo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Map byId(@PathVariable String id) {
+        try {
+            return contractService.byId(id);
         } catch (TmsDataValidationException e) {
             logger.info(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

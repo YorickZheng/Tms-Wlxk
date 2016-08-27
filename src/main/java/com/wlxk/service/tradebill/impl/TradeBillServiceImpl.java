@@ -71,6 +71,11 @@ public class TradeBillServiceImpl implements TradeBillService {
         return repository.findByIdIn(idList);
     }
 
+    @Override
+    public List<TradeBill> getListByContractId(String contractId) {
+        return repository.findByContractId(contractId);
+    }
+
     @Transactional
     @Override
     public Map openTradeBill(OpenTradeBillVo vo) {
@@ -405,4 +410,22 @@ public class TradeBillServiceImpl implements TradeBillService {
         }
     }
 
+    @Override
+    public Map byTradeBillId(String tradeBillId) {
+        try {
+            TradeBill tradeBill = getOneById(tradeBillId);
+            List<Goods> goodsList = goodsService.getListByTradeBillId(tradeBillId);
+            List<Losses> lossesList = lossesService.getListByTradeBillId(tradeBillId);
+            List<TradeBillReview> tradeBillViewList = tradeBillReviewService.getListByTradeBillId(tradeBillId);
+            List<TradeBillOperationRecord> tradeBillOperationRecordList = operationRecordService.getListByTradeBillId(tradeBillId);
+
+            return ResultsUtil.getSuccessResultMap(TradeBillView.newInstance(tradeBill, goodsList, lossesList, tradeBillViewList, tradeBillOperationRecordList));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询失败!", e);
+            throw e;
+        }
+    }
 }

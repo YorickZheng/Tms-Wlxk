@@ -51,6 +51,14 @@ public interface TradeBillService {
     List<TradeBill> getListByIdList(List<String> idList);
 
     /**
+     * 通过合同ID查询交易单
+     *
+     * @param contractId
+     * @return
+     */
+    List<TradeBill> getListByContractId(String contractId);
+
+    /**
      * 开单
      *
      * @param vo
@@ -105,4 +113,12 @@ public interface TradeBillService {
      * @return
      */
     Map byTradeBillNo(String tradeBillNo);
+
+    /**
+     * 通过交易单ID查询详情
+     *
+     * @param tradeBillId
+     * @return
+     */
+    Map byTradeBillId(String tradeBillId);
 }

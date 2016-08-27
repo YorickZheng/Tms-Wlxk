@@ -8,7 +8,6 @@ import com.wlxk.support.util.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -125,13 +124,33 @@ public class TradeBillController {
 
     /**
      * 通过交易单号查询
+     *
      * @param tradeBillNo
      * @return
      */
-    @RequestMapping(value = "/{tradeBillNo}", method = RequestMethod.GET)
+    @RequestMapping(value = "/byTradeBillNo/{tradeBillNo}", method = RequestMethod.GET)
     public Map byTradeBillNo(@PathVariable String tradeBillNo) {
         try {
             return tradeBillService.byTradeBillNo(tradeBillNo);
+        } catch (TmsDataValidationException e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);
+        } catch (Exception e) {
+            logger.info(e.getMessage(), e);
+            return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.EXCEPTION);
+        }
+    }
+
+    /**
+     * 通过交易单ID查询
+     *
+     * @param tradeBillId
+     * @return
+     */
+    @RequestMapping(value = "/{tradeBillId}", method = RequestMethod.GET)
+    public Map byTradeBillId(@PathVariable String tradeBillId) {
+        try {
+            return tradeBillService.byTradeBillId(tradeBillId);
         } catch (TmsDataValidationException e) {
             logger.info(e.getMessage(), e);
             return ResultsUtil.getFailureResultMap(e.getMessage(), CommonProperty.HttpCode.DATA_VALIDATION_EXCEPTION);

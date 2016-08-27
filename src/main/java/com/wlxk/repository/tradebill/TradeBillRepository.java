@@ -16,4 +16,5 @@ import java.util.List;
 public interface TradeBillRepository extends PagingAndSortingRepository<TradeBill, String>, JpaSpecificationExecutor<TradeBill> {
     TradeBill findByTradeBillNo(String tradeBillNo);
     List<TradeBill> findByIdIn(List<String> idList);
+    List<TradeBill> findByContractId(String contractId);
 }

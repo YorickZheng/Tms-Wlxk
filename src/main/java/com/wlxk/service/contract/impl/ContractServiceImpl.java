@@ -123,6 +123,7 @@ public class ContractServiceImpl implements ContractService {
 
             logger.info("2. 更新装车合同");
             Contract contract = getOneById(vo.getContractId());
+            contract.setStatus(CommonProperty.ContractStatus.已装车);
             contract.setModifyById(vo.getOperationById());
             contract.setModifyByName(vo.getOperationByName());
             contract.setModifyByDate(Calendar.getInstance().getTime());
@@ -131,6 +132,7 @@ public class ContractServiceImpl implements ContractService {
             logger.info("3. 更新交易单");
             List<TradeBill> tradeBillList = tradeBillService.getListByIdList(vo.getTradeBillIdList());
             tradeBillList.forEach(tradeBill -> {
+                tradeBill.setStatus(CommonProperty.TradeBillStatus.已装车);
                 tradeBill.setContractId(contract.getId());
                 tradeBill.setContractNo(contract.getContractNo());
                 tradeBill.setModifyById(vo.getOperationById());
@@ -162,6 +164,120 @@ public class ContractServiceImpl implements ContractService {
         }
         if (Objects.isNull(vo.getTradeBillIdList())) {
             throw new TmsDataValidationException("交易单ID集合不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationById())) {
+            throw new TmsDataValidationException("操作人ID不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationByName())) {
+            throw new TmsDataValidationException("操作人名称不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getDescription())) {
+            throw new TmsDataValidationException("操作说明不能为空!");
+        }
+    }
+
+    @Override
+    public Map departure(DepartureVo vo) {
+        try {
+            logger.info("1. 数据校验");
+            checkDeparture(vo);
+
+            logger.info("2. 更新合同");
+            Contract contract = getOneById(vo.getContractId());
+            contract.setStatus(CommonProperty.ContractStatus.运输中);
+            contract.setModifyById(vo.getOperationById());
+            contract.setModifyByName(vo.getOperationByName());
+            contract.setModifyByDate(Calendar.getInstance().getTime());
+            save(contract);
+
+            logger.info("3. 更新交易单");
+            List<TradeBill> tradeBillList = tradeBillService.getListByContractId(contract.getId());
+            tradeBillList.forEach(tradeBill -> {
+                tradeBill.setStatus(CommonProperty.TradeBillStatus.运输中);
+                tradeBill.setContractId(contract.getId());
+                tradeBill.setContractNo(contract.getContractNo());
+                tradeBill.setModifyById(vo.getOperationById());
+                tradeBill.setModifyByName(vo.getOperationByName());
+                tradeBill.setModifyByDate(Calendar.getInstance().getTime());
+                tradeBillOperationRecordService.save(TradeBillOperationRecord.newInstance(tradeBill.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            });
+            tradeBillService.save(tradeBillList);
+
+            logger.info("4. 新增合同操作记录");
+            contractOperationRecordService.save(ContractOperationRecord.newInstance(contract.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("发车失败!", e);
+            throw e;
+        }
+        return ResultsUtil.getSuccessResultMap("发车成功");
+    }
+
+    private void checkDeparture(DepartureVo vo) {
+        if (Objects.isNull(vo)) {
+            throw new TmsDataValidationException("请求主体对象不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getContractId())) {
+            throw new TmsDataValidationException("合同ID不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationById())) {
+            throw new TmsDataValidationException("操作人ID不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getOperationByName())) {
+            throw new TmsDataValidationException("操作人名称不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getDescription())) {
+            throw new TmsDataValidationException("操作说明不能为空!");
+        }
+    }
+
+    @Override
+    public Map receipt(ReceiptVo vo) {
+        try {
+            logger.info("1. 数据校验");
+            checkReceipt(vo);
+
+            logger.info("2. 更新合同");
+            Contract contract = getOneById(vo.getContractId());
+            contract.setStatus(CommonProperty.ContractStatus.已签收);
+            contract.setModifyById(vo.getOperationById());
+            contract.setModifyByName(vo.getOperationByName());
+            contract.setModifyByDate(Calendar.getInstance().getTime());
+            save(contract);
+
+            logger.info("3. 更新交易单");
+            List<TradeBill> tradeBillList = tradeBillService.getListByContractId(contract.getId());
+            tradeBillList.forEach(tradeBill -> {
+                tradeBill.setStatus(CommonProperty.TradeBillStatus.已签收);
+                tradeBill.setContractId(contract.getId());
+                tradeBill.setContractNo(contract.getContractNo());
+                tradeBill.setModifyById(vo.getOperationById());
+                tradeBill.setModifyByName(vo.getOperationByName());
+                tradeBill.setModifyByDate(Calendar.getInstance().getTime());
+                tradeBillOperationRecordService.save(TradeBillOperationRecord.newInstance(tradeBill.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+            });
+            tradeBillService.save(tradeBillList);
+
+            logger.info("4. 新增合同操作记录");
+            contractOperationRecordService.save(ContractOperationRecord.newInstance(contract.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("签收失败!", e);
+            throw e;
+        }
+        return ResultsUtil.getSuccessResultMap("签收成功");
+    }
+
+    private void checkReceipt(ReceiptVo vo) {
+        if (Objects.isNull(vo)) {
+            throw new TmsDataValidationException("请求主体对象不能为空!");
+        }
+        if (Strings.isNullOrEmpty(vo.getContractId())) {
+            throw new TmsDataValidationException("合同ID不能为空!");
         }
         if (Strings.isNullOrEmpty(vo.getOperationById())) {
             throw new TmsDataValidationException("操作人ID不能为空!");
@@ -327,7 +443,9 @@ public class ContractServiceImpl implements ContractService {
 
                 logger.info("3-2. 新增线路");
                 List<ContractLine> lineList = vo.getLineList();
-                lineList.forEach(contractLine -> {contractLine.setContractId(contract.getId());});
+                lineList.forEach(contractLine -> {
+                    contractLine.setContractId(contract.getId());
+                });
                 lineService.save(lineList);
             } else {
                 logger.info("3-1. 无路线更新");
@@ -419,6 +537,24 @@ public class ContractServiceImpl implements ContractService {
         }
         if (Objects.isNull(vo.getSortList())) {
             throw new TmsDataValidationException("排序集合不能为空!");
+        }
+    }
+
+    @Override
+    public Map byId(String id) {
+        try {
+            Contract contract = getOneById(id);
+            List<ContractLine> lineList = lineService.getListByContractId(id);
+            List<ContractReview> reviews = reviewService.getListByContractId(id);
+            List<ContractOperationRecord> operationRecordList = contractOperationRecordService.getListByBusinessId(id);
+
+            return ResultsUtil.getSuccessResultMap(ContractView.newInstance(contract, lineList, reviews, operationRecordList));
+        } catch (TmsDataValidationException e) {
+            logger.error("数据校验异常!", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询失败!", e);
+            throw e;
         }
     }
 }
