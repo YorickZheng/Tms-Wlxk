@@ -11,7 +11,15 @@ import java.util.List;
  */
 public class AddRoleVo extends OperationVo {
     private Role role;
-    private List<RoleMenu> roleMenuList;
+    private List<String> menuIdList;
+
+    public List<String> getMenuIdList() {
+        return menuIdList;
+    }
+
+    public void setMenuIdList(List<String> menuIdList) {
+        this.menuIdList = menuIdList;
+    }
 
     public Role getRole() {
         return role;
@@ -21,11 +29,4 @@ public class AddRoleVo extends OperationVo {
         this.role = role;
     }
 
-    public List<RoleMenu> getRoleMenuList() {
-        return roleMenuList;
-    }
-
-    public void setRoleMenuList(List<RoleMenu> roleMenuList) {
-        this.roleMenuList = roleMenuList;
-    }
 }

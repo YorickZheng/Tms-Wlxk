@@ -6,7 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
 @ServletComponentScan()
@@ -21,4 +24,6 @@ public class TmsApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(this.getClass());
 	}
+
+
 }

@@ -81,10 +81,19 @@ public class RoleServiceImpl implements RoleService {
             Role role = save(vo.getRole());
 
             logger.info("3. 添加角色菜单关联");
+            /*
             List<RoleMenu> roleMenuList = vo.getRoleMenuList();
             roleMenuList.forEach(roleMenu -> {
                 roleMenu.setRoleId(role.getId());
             });
+            roleMenuService.save(roleMenuList);*/
+            List<RoleMenu> roleMenuList = Lists.newArrayList();
+            for (String menuId : vo.getMenuIdList()) {
+                RoleMenu roleMenu = new RoleMenu();
+                roleMenu.setRoleId(role.getId());
+                roleMenu.setMenuId(menuId);
+                roleMenuList.add(roleMenu);
+            }
             roleMenuService.save(roleMenuList);
 
             logger.info("4. 添加操作记录");
@@ -199,15 +208,18 @@ public class RoleServiceImpl implements RoleService {
             save(role);
 
             logger.info("3. 角色菜单关联操作");
-            if (!Objects.isNull(vo.getRoleMenuList())) {
+            if (!Objects.isNull(vo.getMenuIdList())) {
                 logger.info("3-1. 删除关联");
                 roleMenuService.deleteByRoleId(role.getId());
 
                 logger.info("3-2. 新增关联");
-                List<RoleMenu> roleMenuList = vo.getRoleMenuList();
-                roleMenuList.forEach(roleMenu -> {
+                List<RoleMenu> roleMenuList = Lists.newArrayList();
+                for (String menuId : vo.getMenuIdList()) {
+                    RoleMenu roleMenu = new RoleMenu();
                     roleMenu.setRoleId(role.getId());
-                });
+                    roleMenu.setMenuId(menuId);
+                    roleMenuList.add(roleMenu);
+                }
                 roleMenuService.save(roleMenuList);
             } else {
                 logger.info("无关联数据");

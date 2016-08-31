@@ -62,7 +62,7 @@ public class UserControllerTest {
         vo.setOperationByName("管理员");
         vo.setDescription("新增用户!");
         vo.setUser(new User("MaLin", "123456", "马林"));
-        vo.setUserRoleList(Lists.newArrayList(new UserRole("402883945631ad9d015631adb6ec0000"), new UserRole("186d6f4f-62d3-4583-990e-781ffa92e345")));
+        //vo.setUserRoleList(Lists.newArrayList(new UserRole("402883945631ad9d015631adb6ec0000"), new UserRole("186d6f4f-62d3-4583-990e-781ffa92e345")));
 
         MvcResult result = mockMvc.perform(
                 post("/user/add", "json")

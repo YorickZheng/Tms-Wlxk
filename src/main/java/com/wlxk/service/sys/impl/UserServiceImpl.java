@@ -82,11 +82,20 @@ public class UserServiceImpl implements UserService {
             User user = save(vo.getUser());
 
             logger.info("3. 新增用户角色关联");
+            /*
             List<UserRole> userRoleList = vo.getUserRoleList();
             userRoleList.forEach(userRole -> {
                 userRole.setUserId(user.getId());
             });
-            userRoleService.save(vo.getUserRoleList());
+            userRoleService.save(vo.getUserRoleList());*/
+            List<UserRole> userRoleList = Lists.newArrayList();
+            for (String roleId : vo.getRoleIdList()) {
+                UserRole userRole = new UserRole();
+                userRole.setRoleId(roleId);
+                userRole.setUserId(user.getId());
+                userRoleList.add(userRole);
+            }
+            userRoleService.save(userRoleList);
 
             logger.info("3. 添加操作记录");
             operationRecordService.save(UserOperationRecord.newInstance(user.getId(), vo.getOperationById(), vo.getOperationByName(), vo.getDescription()));
@@ -200,15 +209,18 @@ public class UserServiceImpl implements UserService {
             save(user);
 
             logger.info("3. 用户角色关联操作");
-            if (!Objects.isNull(vo.getUserRoleList())) {
+            if (!Objects.isNull(vo.getRoleIdList())) {
                 logger.info("3-1. 删除用户角色关联");
                 userRoleService.deleteByUserId(vo.getUser().getId());
 
                 logger.info("3-2. 新增用户角色关联");
-                List<UserRole> userRoleList = vo.getUserRoleList();
-                userRoleList.forEach(userRole -> {
+                List<UserRole> userRoleList = Lists.newArrayList();
+                for (String roleId : vo.getRoleIdList()) {
+                    UserRole userRole = new UserRole();
+                    userRole.setRoleId(roleId);
                     userRole.setUserId(user.getId());
-                });
+                    userRoleList.add(userRole);
+                }
                 userRoleService.save(userRoleList);
             } else {
                 logger.info("无用户角色关联操作");

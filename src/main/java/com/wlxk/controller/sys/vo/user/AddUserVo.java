@@ -11,7 +11,15 @@ import java.util.List;
  */
 public class AddUserVo extends OperationVo {
     private User user;
-    private List<UserRole> userRoleList;
+    private List<String> roleIdList;
+
+    public List<String> getRoleIdList() {
+        return roleIdList;
+    }
+
+    public void setRoleIdList(List<String> roleIdList) {
+        this.roleIdList = roleIdList;
+    }
 
     public User getUser() {
         return user;
@@ -21,11 +29,4 @@ public class AddUserVo extends OperationVo {
         this.user = user;
     }
 
-    public List<UserRole> getUserRoleList() {
-        return userRoleList;
-    }
-
-    public void setUserRoleList(List<UserRole> userRoleList) {
-        this.userRoleList = userRoleList;
-    }
 }

@@ -83,7 +83,7 @@ public class RoleControllerTest {
 
         AddRoleVo vo = new AddRoleVo();
         vo.setRole(role);
-        vo.setRoleMenuList(roleMenuList);
+        //vo.setRoleMenuList(roleMenuList);
         vo.setOperationById("123456");
         vo.setOperationByName("马林");
         vo.setDescription("马林测试新增角色");
